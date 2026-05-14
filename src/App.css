@@ -97,7 +97,8 @@ textarea {
 
     .temps {
         overflow-y: scroll;
-        height: 50rem;
+        min-height: 6.26rem;
+        max-height: 50rem;
 
         .temp {
             margin: 0.25rem 0rem;
