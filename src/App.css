@@ -89,41 +89,48 @@ textarea {
 }
 
 .tempsList {
+    position: relative;
     padding: 0.625rem 0rem;
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
 
-    .temp {
-        padding: 0.625rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-        border-radius: 0.5rem;
-        background-color: var(--first);
+    .temps {
+        overflow-y: scroll;
+        height: 50rem;
 
-        h5,
-        p {
-            color: var(--white) !important;
-        }
-
-        .header {
+        .temp {
+            margin: 0.25rem 0rem;
+            padding: 0.625rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 0.25rem;
+            border-radius: 0.5rem;
+            background-color: var(--first);
 
-            span {
-                cursor: pointer;
-            }
-        }
-
-        .body {
+            h5,
             p {
-                cursor: pointer;
-                display: inline;
-                word-break: break-word;
-                white-space: pre-wrap;
-                overflow-wrap: break-word;
+                color: var(--white) !important;
+            }
+
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                span {
+                    cursor: pointer;
+                }
+            }
+
+            .body {
+                p {
+                    cursor: pointer;
+                    display: inline;
+                    word-break: break-word;
+                    white-space: pre-wrap;
+                    overflow-wrap: break-word;
+                }
             }
         }
     }

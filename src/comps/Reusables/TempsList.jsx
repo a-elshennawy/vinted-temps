@@ -90,27 +90,29 @@ function TempsList() {
             <NoTemplates />
           </>
         )}
-        {filtered.map((temp) => (
-          <div key={temp.id} className="temp">
-            <div className="header">
-              <h5>{temp.title}</h5>
-              <span
-                onClick={() => handleCopy(temp)}
-                style={{ cursor: "pointer" }}
-                title="Copy"
-              >
-                {copiedId === temp.id ? (
-                  <FaCheck color="var(--white)" />
-                ) : (
-                  <FaCopy color="var(--white)" />
-                )}
-              </span>
+        <div className="temps">
+          {filtered.map((temp) => (
+            <div key={temp.id} className="temp">
+              <div className="header">
+                <h5>{temp.title}</h5>
+                <span
+                  onClick={() => handleCopy(temp)}
+                  style={{ cursor: "pointer" }}
+                  title="Copy"
+                >
+                  {copiedId === temp.id ? (
+                    <FaCheck color="var(--white)" />
+                  ) : (
+                    <FaCopy color="var(--white)" />
+                  )}
+                </span>
+              </div>
+              <div className="body">
+                <p>{temp.body}</p>
+              </div>
             </div>
-            <div className="body">
-              <p>{temp.body}</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </>
   );
