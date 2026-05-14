@@ -1,9 +1,19 @@
-import Home from "./comps/Home/Home";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import MainLoader from "./comps/Reusables/UI/MainLoader";
+
+const Home = lazy(() => import("./comps/Home/Home"));
 
 function App() {
   return (
     <>
-      <Home />
+      <Router>
+        <Suspense fallback={<MainLoader size={200} color="var(--first)" />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </Suspense>
+      </Router>
     </>
   );
 }

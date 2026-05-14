@@ -28,6 +28,11 @@ p {
     color: var(--first) !important;
 }
 
+body {
+    width: 100dvw;
+    height: 100dvh;
+}
+
 input,
 textarea {
     padding: 0.313rem;
@@ -76,6 +81,10 @@ textarea {
             background-color: var(--first);
             color: var(--white);
         }
+
+        .disabledBtn {
+            background-color: var(--second);
+        }
     }
 }
 
@@ -117,19 +126,43 @@ textarea {
                 overflow-wrap: break-word;
             }
         }
-
-        .actions {
-            display: flex;
-            justify-content: start;
-            align-items: center;
-            gap: 0.125rem;
-            color: var(--white);
-
-            span {
-                cursor: pointer;
-            }
-        }
     }
+}
+
+.copyToast {
+    background-color: var(--first);
+    color: var(--white);
+    padding: 0.313rem 0.625rem;
+    border-radius: 0.5rem;
+    width: fit-content !important;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.313rem;
+    text-transform: capitalize;
+
+    img {
+        width: 1.25rem;
+    }
+}
+
+.loaderComp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.mainLoader {
+    width: 100dvw !important;
+    height: 100dvh !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 ::-webkit-scrollbar {
