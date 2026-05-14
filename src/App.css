@@ -1,0 +1,137 @@
+@import url("./fonts.css");
+
+:root {
+    --white: #fff;
+    --blacks: #000;
+    --first: #007782;
+    --second: #66adb4;
+}
+
+* {
+    font-family: ubuntu !important;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    text-transform: capitalize;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: var(--first) !important;
+}
+
+input,
+textarea {
+    padding: 0.313rem;
+    border-radius: 0.5rem;
+    border: 0.063rem solid var(--second);
+    color: var(--first);
+
+    &:focus {
+        outline: none;
+    }
+
+    &::placeholder {
+        color: var(--second);
+        text-transform: capitalize;
+    }
+}
+
+.inpComp {
+    padding: 0.625rem 0rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+
+    .inputField {
+        label {
+            display: block;
+            text-transform: capitalize;
+            margin-bottom: 0.25rem;
+            color: var(--first);
+            font-weight: bold;
+        }
+    }
+
+    .btnsField {
+        display: flex;
+        gap: 0.5rem;
+
+        button {
+            padding: 0.313rem 0.625rem;
+            border-radius: 0.5rem;
+            border: none;
+            text-transform: capitalize;
+            display: flex;
+            align-items: center;
+            gap: 0.313rem;
+            background-color: var(--first);
+            color: var(--white);
+        }
+    }
+}
+
+.tempsList {
+    padding: 0.625rem 0rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+
+    .temp {
+        padding: 0.625rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        border-radius: 0.5rem;
+        background-color: var(--first);
+
+        h5,
+        p {
+            color: var(--white) !important;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            span {
+                cursor: pointer;
+            }
+        }
+
+        .body {
+            p {
+                cursor: pointer;
+                display: inline;
+                word-break: break-word;
+                white-space: pre-wrap;
+                overflow-wrap: break-word;
+            }
+        }
+
+        .actions {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 0.125rem;
+            color: var(--white);
+
+            span {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
