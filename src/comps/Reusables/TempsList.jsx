@@ -1,4 +1,5 @@
 import { FaCopy, FaCheck } from "react-icons/fa";
+import { RiChatDeleteFill } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabase";
 import { AnimatePresence, motion as Motion } from "motion/react";
@@ -12,12 +13,28 @@ function TempsList() {
   const [search, setSearch] = useState("");
   const [copiedId, setCopiedId] = useState(null);
   const [toastShow, setToastShow] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchTemps = async () => {
       const { data, error } = await supabase
         .from("templates")
         .select("*")
+        .eq("approval", true)
         .order("created_at", { ascending: false });
       if (!error) setTemps(data);
       setLoading(false);
@@ -31,13 +48,24 @@ function TempsList() {
         { event: "*", schema: "public", table: "templates" },
         (payload) => {
           if (payload.eventType === "INSERT") {
-            setTemps((prev) => [payload.new, ...prev]);
+            if (payload.new.approval) {
+              setTemps((prev) => [payload.new, ...prev]);
+            }
           } else if (payload.eventType === "DELETE") {
             setTemps((prev) => prev.filter((t) => t.id !== payload.old.id));
           } else if (payload.eventType === "UPDATE") {
-            setTemps((prev) =>
-              prev.map((t) => (t.id === payload.new.id ? payload.new : t)),
-            );
+            setTemps((prev) => {
+              if (!payload.new.approval) {
+                return prev.filter((t) => t.id !== payload.new.id);
+              }
+              const exists = prev.some((t) => t.id === payload.new.id);
+              if (exists) {
+                return prev.map((t) =>
+                  t.id === payload.new.id ? payload.new : t,
+                );
+              }
+              return [payload.new, ...prev];
+            });
           }
         },
       )
@@ -53,6 +81,17 @@ function TempsList() {
 
     setToastShow(true);
     setTimeout(() => setToastShow(false), 2000);
+  };
+
+  const handleDelete = async (temp) => {
+    const { error } = await supabase
+      .from("templates")
+      .delete()
+      .eq("id", temp.id);
+
+    if (error) {
+      console.error("error deleting template:", error.message);
+    }
   };
 
   const filtered = temps.filter((t) =>
@@ -95,17 +134,26 @@ function TempsList() {
             <div key={temp.id} className="temp">
               <div className="header">
                 <h5>{temp.title}</h5>
-                <span
-                  onClick={() => handleCopy(temp)}
-                  style={{ cursor: "pointer" }}
-                  title="Copy"
-                >
-                  {copiedId === temp.id ? (
-                    <FaCheck color="var(--white)" />
-                  ) : (
-                    <FaCopy color="var(--white)" />
+                <div className="actions">
+                  <span
+                    onClick={() => handleCopy(temp)}
+                    style={{ cursor: "pointer" }}
+                    title="Copy"
+                  >
+                    {copiedId === temp.id ? (
+                      <FaCheck color="var(--white)" />
+                    ) : (
+                      <FaCopy color="var(--white)" />
+                    )}
+                  </span>
+                  {isLoggedIn && (
+                    <>
+                      <span title="Delete" onClick={() => handleDelete(temp)}>
+                        <RiChatDeleteFill size={20} color="var(--error)" />
+                      </span>
+                    </>
                   )}
-                </span>
+                </div>
               </div>
               <div className="body">
                 <p>{temp.body}</p>

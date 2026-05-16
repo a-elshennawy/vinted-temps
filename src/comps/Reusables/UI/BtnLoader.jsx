@@ -1,13 +1,13 @@
 import { TailSpin } from "react-loader-spinner";
 
-function BtnLoader() {
+function BtnLoader({ color = "#fff" }) {
   return (
     <>
       <TailSpin
         visible={true}
         height="18"
         width="18"
-        color="#fff"
+        color={color}
         ariaLabel="tail-spin-loading"
         radius="1"
         wrapperStyle={{}}

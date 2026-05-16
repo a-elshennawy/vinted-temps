@@ -1,0 +1,177 @@
+import "./Pending.css";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabase";
+import Loader from "../../comps/Reusables/UI/Loader";
+import approveIcon from "../../assets/imgs/correct.png";
+import deleteIcon from "../../assets/imgs/cancel.png";
+import NoPending from "../../comps/Reusables/UI/NoPending";
+import { AnimatePresence, motion as Motion } from "motion/react";
+
+function Pending() {
+  const [temps, setTemps] = useState([]);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [ApprovedToastShow, setApprovedToastShow] = useState(false);
+  const [RejectedToastShow, setRejectedToastShow] = useState(false);
+
+  useEffect(() => {
+    checkUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        navigate("/auth");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const checkUser = async () => {
+    setLoading(true);
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      navigate("/auth");
+      return;
+    }
+
+    setUser(session.user);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    const fetchTemps = async () => {
+      const { data, error } = await supabase
+        .from("templates")
+        .select("*")
+        .eq("approval", false)
+        .order("created_at", { ascending: false });
+      if (!error) setTemps(data);
+      setLoading(false);
+    };
+    fetchTemps();
+
+    const channel = supabase
+      .channel("pending-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "templates" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            if (!payload.new.approval) {
+              setTemps((prev) => [payload.new, ...prev]);
+            }
+          } else if (payload.eventType === "DELETE") {
+            setTemps((prev) => prev.filter((t) => t.id !== payload.old.id));
+          } else if (payload.eventType === "UPDATE") {
+            setTemps((prev) => prev.filter((t) => t.id !== payload.new.id));
+          }
+        },
+      )
+      .subscribe();
+    return () => supabase.removeChannel(channel);
+  }, []);
+
+  if (loading || !user) {
+    <Loader />;
+  }
+
+  const handleDelete = async (temp) => {
+    const { error } = await supabase
+      .from("templates")
+      .delete()
+      .eq("id", temp.id);
+
+    setRejectedToastShow(true);
+    setTimeout(() => setRejectedToastShow(false), 2000);
+
+    if (error) {
+      console.error("error deleting template:", error.message);
+    }
+  };
+
+  const handleApprove = async (temp) => {
+    const { error } = await supabase
+      .from("templates")
+      .update({ approval: true })
+      .eq("id", temp.id);
+
+    setApprovedToastShow(true);
+    setTimeout(() => setApprovedToastShow(false), 2000);
+
+    if (error) {
+      console.error("error approving template:", error.message);
+    }
+  };
+
+  return (
+    <>
+      <title>Temp Store | Pending Approvals</title>
+      <div className="row justify-content-center align-items-center m-0 gap-1 p-2">
+        <AnimatePresence>
+          {ApprovedToastShow && (
+            <Motion.span
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="approvedToast"
+            >
+              Approved <img src={approveIcon} alt="approved" />
+            </Motion.span>
+          )}
+          {RejectedToastShow && (
+            <Motion.span
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="deletedToast"
+            >
+              Deleted <img src={deleteIcon} alt="deleted" />
+            </Motion.span>
+          )}
+        </AnimatePresence>
+        {temps.length === 0 ? (
+          <>
+            <div className="col-10">
+              <NoPending />
+            </div>
+          </>
+        ) : (
+          temps.map((temp) => (
+            <div
+              key={temp.id}
+              className="pendingTemp col-xl-3 col-lg-3 col-md-4 col-sm-5 col-12"
+            >
+              <div className="header">
+                <h3>{temp.title}</h3>
+              </div>
+              <div className="body">
+                <h4>{temp.body}</h4>
+              </div>
+              <div className="actions pt-2">
+                <button onClick={() => handleApprove(temp)}>
+                  approve <img src={approveIcon} alt="approve" />
+                </button>
+                <button onClick={() => handleDelete(temp)}>
+                  delete <img src={deleteIcon} alt="delete" />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </>
+  );
+}
+
+export default Pending;

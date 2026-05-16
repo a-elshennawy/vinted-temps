@@ -2,9 +2,10 @@
 
 :root {
     --white: #fff;
-    --blacks: #000;
+    --black: #000;
     --first: #007782;
     --second: #66adb4;
+    --error: #ff2c2c;
 }
 
 * {
@@ -77,13 +78,17 @@ textarea {
             text-transform: capitalize;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.313rem;
             background-color: var(--first);
             color: var(--white);
+            transition: all 0.3s ease-in-out;
         }
 
         .disabledBtn {
+            cursor: not-allowed;
             background-color: var(--second);
+            transition: all 0.3s ease-in-out;
         }
     }
 }
@@ -98,7 +103,7 @@ textarea {
     .temps {
         overflow-y: scroll;
         min-height: 6.26rem;
-        max-height: 50rem;
+        max-height: 46.875rem;
 
         .temp {
             margin: 0.25rem 0rem;
@@ -119,14 +124,25 @@ textarea {
                 justify-content: space-between;
                 align-items: center;
 
-                span {
-                    cursor: pointer;
+                .actions {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 0.313rem;
+
+                    span {
+                        cursor: pointer;
+
+                        img {
+                            width: 1.25rem;
+                            height: 1.25rem;
+                        }
+                    }
                 }
             }
 
             .body {
                 p {
-                    cursor: pointer;
                     display: inline;
                     word-break: break-word;
                     white-space: pre-wrap;
@@ -144,8 +160,28 @@ textarea {
     border-radius: 0.5rem;
     width: fit-content !important;
     position: fixed;
-    top: 1rem;
+    top: 3.125rem;
     right: 1rem;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.313rem;
+    text-transform: capitalize;
+
+    img {
+        width: 1.25rem;
+    }
+}
+
+.submitToast {
+    background-color: var(--first);
+    color: var(--white);
+    padding: 0.313rem 0.625rem;
+    border-radius: 0.5rem;
+    width: fit-content !important;
+    position: fixed;
+    bottom: 3.125rem;
+    left: 1rem;
     transform: translateX(-50%);
     display: flex;
     align-items: center;

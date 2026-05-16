@@ -1,0 +1,42 @@
+nav {
+    position: sticky;
+    top: 0;
+    background-color: var(--first);
+    padding: 0.625rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 1.25rem;
+
+    button {
+        background-color: transparent;
+        padding: 0;
+        border: 0;
+        position: relative;
+
+        svg {
+            color: var(--white);
+        }
+    }
+
+    span {
+        cursor: pointer;
+        padding: 0;
+
+        img {
+            width: 1.563rem;
+        }
+    }
+
+    .NotificationDot {
+        position: absolute;
+        top: -0.125rem;
+        right: -0.313rem;
+        background-color: var(--error);
+        width: 0.938rem;
+        height: 0.938rem;
+        border-radius: 50%;
+        font-size: 0.625rem;
+        color: var(--white);
+    }
+}
