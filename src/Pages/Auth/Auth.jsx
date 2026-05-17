@@ -77,6 +77,7 @@ function Auth() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="email"
             />
           </div>
           <div className="line"></div>
@@ -87,6 +88,7 @@ function Auth() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
             />
             <span onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? (
