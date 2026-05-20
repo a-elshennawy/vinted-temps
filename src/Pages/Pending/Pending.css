@@ -7,13 +7,19 @@
     gap: 0.313rem;
 
     .header {
-        h3 {
+        h5 {
             color: var(--white) !important;
         }
     }
 
+    .line {
+        background-color: var(--second);
+        height: 0.125rem;
+        width: 100%;
+    }
+
     .body {
-        h4 {
+        p {
             color: var(--white) !important;
         }
     }

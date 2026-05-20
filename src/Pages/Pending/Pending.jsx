@@ -150,14 +150,16 @@ function Pending() {
           temps.map((temp) => (
             <div
               key={temp.id}
-              className="pendingTemp col-xl-3 col-lg-3 col-md-4 col-sm-5 col-12"
+              className="pendingTemp col-xl-4 col-lg-4 col-md-5 col-sm-10 col-12"
             >
               <div className="header">
-                <h3>{temp.title}</h3>
+                <h5>{temp.title}</h5>
               </div>
+              <div className="line"></div>
               <div className="body">
-                <h4>{temp.body}</h4>
+                <p>{temp.body}</p>
               </div>
+              <div className="line"></div>
               <div className="actions pt-2">
                 <button onClick={() => handleApprove(temp)}>
                   approve <img src={approveIcon} alt="approve" />

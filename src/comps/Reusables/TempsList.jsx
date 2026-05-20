@@ -1,5 +1,6 @@
 import { FaCopy, FaCheck } from "react-icons/fa";
 import { RiChatDeleteFill } from "react-icons/ri";
+import { MdDelete } from "react-icons/md";
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabase";
 import { AnimatePresence, motion as Motion } from "motion/react";
@@ -149,12 +150,13 @@ function TempsList() {
                   {isLoggedIn && (
                     <>
                       <span title="Delete" onClick={() => handleDelete(temp)}>
-                        <RiChatDeleteFill size={20} color="var(--error)" />
+                        <MdDelete size={24} color="var(--error)" />
                       </span>
                     </>
                   )}
                 </div>
               </div>
+              <div className="line"></div>
               <div className="body">
                 <p>{temp.body}</p>
               </div>

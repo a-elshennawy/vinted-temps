@@ -9,7 +9,7 @@
 }
 
 * {
-    font-family: ubuntu !important;
+    font-family: outfit !important;
 }
 
 a {
@@ -117,6 +117,12 @@ textarea {
             h5,
             p {
                 color: var(--white) !important;
+            }
+
+            .line {
+                background-color: var(--second);
+                height: 0.125rem;
+                width: 100%;
             }
 
             .header {
