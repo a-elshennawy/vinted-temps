@@ -61,6 +61,7 @@
     align-items: center;
     gap: 0.313rem;
     text-transform: capitalize;
+    z-index: 99999;
 
     img {
         width: 1.25rem;
@@ -80,6 +81,7 @@
     align-items: center;
     gap: 0.313rem;
     text-transform: capitalize;
+    z-index: 99999;
 
     img {
         width: 1.25rem;
