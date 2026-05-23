@@ -56,7 +56,6 @@ function InputComp() {
           </Motion.span>
         )}
       </AnimatePresence>
-      <h3>add template</h3>
 
       <div className="inputField">
         <label>template title</label>

@@ -117,7 +117,6 @@ function TempsList() {
       </AnimatePresence>
 
       <div className="tempsList col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12">
-        <h3>saved templates</h3>
         <input
           type="search"
           placeholder="search using template title..."

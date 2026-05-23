@@ -115,7 +115,7 @@ function Pending() {
   return (
     <>
       <title>Temp Store | Pending Approvals</title>
-      <div className="row justify-content-center align-items-center m-0 gap-1 p-2">
+      <div className="row justify-content-start align-items-start m-0 gap-1 py-3 px-2">
         <AnimatePresence>
           {ApprovedToastShow && (
             <Motion.span
