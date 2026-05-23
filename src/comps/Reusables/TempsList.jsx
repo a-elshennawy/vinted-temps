@@ -1,5 +1,4 @@
 import { FaCopy, FaCheck } from "react-icons/fa";
-import { RiChatDeleteFill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabase";

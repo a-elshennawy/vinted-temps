@@ -17,8 +17,6 @@ function Pending() {
   const [RejectedToastShow, setRejectedToastShow] = useState(false);
 
   useEffect(() => {
-    checkUser();
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -26,26 +24,12 @@ function Pending() {
         navigate("/auth");
       } else {
         setUser(session.user);
+        setLoading(false);
       }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
-
-  const checkUser = async () => {
-    setLoading(true);
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session) {
-      navigate("/auth");
-      return;
-    }
-
-    setUser(session.user);
-    setLoading(false);
-  };
 
   useEffect(() => {
     const fetchTemps = async () => {
