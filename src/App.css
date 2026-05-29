@@ -93,6 +93,102 @@ textarea {
     }
 }
 
+.greenLine {
+    background-color: var(--first);
+    height: 0.125rem;
+    width: 100%;
+}
+
+.counterComp {
+    padding: 0.625rem 0rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+
+    .startBtn {
+        padding: 0.313rem 0.5rem;
+        background-color: var(--first);
+        color: var(--white);
+        border: none;
+        border-radius: 0.625rem;
+        text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.313rem;
+        justify-self: center;
+        align-self: center;
+    }
+
+    .mainCounter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.625rem;
+        background-color: var(--first);
+        border-radius: 0.625rem;
+
+        h1 {
+            font-size: 6.25rem;
+            color: var(--white) !important;
+        }
+
+        button {
+            background-color: var(--white);
+            color: var(--first);
+            border-radius: 0rem 1.875rem 1.875rem 0rem;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.313rem;
+            font-size: 5rem;
+            font-weight: bold;
+
+            &:last-child {
+                border-radius: 1.875rem 0rem 0rem 1.875rem;
+            }
+        }
+    }
+
+    .endBtn {
+        background-color: var(--error);
+        color: var(--white);
+        border: none;
+        border-radius: 0.625rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.313rem;
+        padding: 0.313rem 0.5rem;
+    }
+
+    .logs {
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        gap: 0.313rem;
+
+        .logItem {
+            background-color: var(--first);
+            color: var(--white);
+            padding: 0.313rem;
+            border-radius: 0.625rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.313rem;
+
+            .logCount,
+            .logRange {
+                font-size: 1.25rem;
+            }
+        }
+    }
+}
+
 .tempsList {
     position: relative;
     padding: 0.625rem 0rem;

@@ -5,6 +5,7 @@ import BtnLoader from "./UI/BtnLoader";
 import useMobile from "../Hooks/useMobile";
 import { AnimatePresence, motion as Motion } from "motion/react";
 import correctIcon from "../../assets/imgs/correct.png";
+import CounterComp from "./CounterComp";
 
 function InputComp() {
   const [tempTitle, setTempTitle] = useState("");
@@ -99,6 +100,8 @@ function InputComp() {
           )}
         </button>
       </div>
+      <div className="greenLine"></div>
+      <CounterComp />
     </div>
   );
 }
