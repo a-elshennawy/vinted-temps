@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
+import { AnimatePresence, motion as Motion } from "motion/react";
 import { VscDebugStart } from "react-icons/vsc";
-import { IoExitOutline } from "react-icons/io5";
+import { IoExitOutline, IoTicketOutline } from "react-icons/io5";
+import { FaMinus, FaPlus } from "react-icons/fa";
+import correctIcon from "../../assets/imgs/correct.png";
+import incSound from "../../assets/wow.mp3";
+import decSound from "../../assets/faaah.mp3";
+import endShiftSound from "../../assets/bruh.mp3";
 import WaitingShift from "./UI/WaitingShift";
 
 function CounterComp() {
@@ -65,6 +71,7 @@ function CounterComp() {
   };
 
   const handleEndShift = () => {
+    playSound(endShiftSound);
     setIsShiftActive(false);
     setCurrentCount(0);
     setLogs([]);
@@ -74,8 +81,22 @@ function CounterComp() {
     localStorage.removeItem("lastCheckedHour");
   };
 
-  const increment = () => setCurrentCount((prev) => prev + 1);
-  const decrement = () => setCurrentCount((prev) => (prev > 0 ? prev - 1 : 0));
+  const playSound = (src) => {
+    new Audio(src).play();
+  };
+
+  const increment = () => {
+    setCurrentCount((prev) => prev + 1);
+    playSound(incSound);
+  };
+
+  const decrement = () => {
+    setCurrentCount((prev) => (prev > 0 ? prev - 1 : 0));
+    playSound(decSound);
+  };
+
+  const totalTickets =
+    logs.reduce((acc, log) => acc + log.count, 0) + currentCount;
 
   if (!isShiftActive) {
     return (
@@ -91,22 +112,52 @@ function CounterComp() {
   return (
     <div className="counterComp">
       <div className="mainCounter py-2 px-0 mb-3">
-        <button onClick={decrement}>-</button>
+        <button onClick={decrement}>
+          <FaMinus size={24} />
+        </button>
         <h1>{currentCount}</h1>
-        <button onClick={increment}>+</button>
+        <button onClick={increment}>
+          <FaPlus size={24} />
+        </button>
       </div>
+
+      <AnimatePresence>
+        {totalTickets > 0 && (
+          <Motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="currentTotal my-2"
+          >
+            <span>current total : {totalTickets}</span>
+            <img src={correctIcon} alt="icon" />
+          </Motion.div>
+        )}
+      </AnimatePresence>
 
       <button className="endBtn my-2" onClick={handleEndShift}>
         End Shift <IoExitOutline size={20} />
       </button>
 
       <div className="logs">
-        {logs.map((log, index) => (
-          <div key={index} className="logItem">
-            <span className="logCount mb-1">{log.count} tickets</span>
-            <span className="logRange">{log.hourRange}</span>
-          </div>
-        ))}
+        <AnimatePresence>
+          {logs.map((log, index) => (
+            <Motion.div
+              key={index}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="logItem"
+            >
+              <span className="logRange">{log.hourRange}</span>
+              <span className="logCount mb-1">
+                {log.count} tickets <IoTicketOutline />
+              </span>
+            </Motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );

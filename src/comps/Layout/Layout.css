@@ -7,6 +7,7 @@ nav {
     justify-content: start;
     align-items: center;
     gap: 1.25rem;
+    z-index: 999;
 
     button {
         background-color: transparent;

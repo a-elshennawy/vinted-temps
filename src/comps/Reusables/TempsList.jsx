@@ -116,10 +116,6 @@ function TempsList() {
       </AnimatePresence>
 
       <div className="tempsList col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12">
-        <p style={{ fontWeight: "bold" }}>
-          Note : carefully follow the relevent process map BEFORE searching for
-          a free styled template :)
-        </p>
         <input
           type="search"
           placeholder="search using template title..."

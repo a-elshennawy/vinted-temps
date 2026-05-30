@@ -125,7 +125,7 @@ textarea {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.625rem;
+        gap: 1.25rem;
         background-color: var(--first);
         border-radius: 0.625rem;
 
@@ -137,18 +137,39 @@ textarea {
         button {
             background-color: var(--white);
             color: var(--first);
-            border-radius: 0rem 1.875rem 1.875rem 0rem;
             border: none;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0.313rem;
+            height: 3.125rem;
+            width: 3.125rem;
+            padding: 1.25rem 0.313rem;
+            border-radius: 0rem 1.25rem 1.25rem 0rem;
             font-size: 5rem;
             font-weight: bold;
 
             &:last-child {
-                border-radius: 1.875rem 0rem 0rem 1.875rem;
+                border-radius: 1.25rem 0rem 0rem 1.25rem;
             }
+        }
+    }
+
+    .currentTotal {
+        display: flex;
+        align-items: center;
+        gap: 0.313rem;
+        background: linear-gradient(45deg, var(--first), var(--second));
+        padding: 0rem 0.25rem;
+        border-radius: 0.625rem;
+
+        span {
+            font-size: 1.563rem;
+            text-transform: capitalize;
+            color: var(--white);
+        }
+
+        img {
+            width: 1.563rem;
         }
     }
 
@@ -168,22 +189,33 @@ textarea {
         display: flex;
         justify-content: center;
         align-items: start;
+        flex-wrap: wrap;
         gap: 0.313rem;
 
         .logItem {
             background-color: var(--first);
             color: var(--white);
-            padding: 0.313rem;
             border-radius: 0.625rem;
+            padding: 0.25rem 0.313rem;
+            overflow: hidden;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 0.313rem;
 
-            .logCount,
             .logRange {
+                background-color: var(--second);
+                font-size: 1rem;
+                padding: 0.313rem;
+                border-radius: 0.313rem;
+            }
+
+            .logCount {
                 font-size: 1.25rem;
+                display: flex;
+                align-items: center;
+                gap: 0.313rem;
             }
         }
     }
@@ -224,7 +256,7 @@ textarea {
             .header {
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
+                align-items: start;
 
                 .actions {
                     display: flex;
