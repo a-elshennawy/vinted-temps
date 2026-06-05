@@ -234,6 +234,7 @@ textarea {
         max-height: 46.875rem;
 
         .temp {
+            position: relative;
             margin: 0.25rem 0rem;
             padding: 0.625rem;
             display: flex;
@@ -266,11 +267,6 @@ textarea {
 
                     span {
                         cursor: pointer;
-
-                        img {
-                            width: 1.25rem;
-                            height: 1.25rem;
-                        }
                     }
                 }
             }
@@ -282,6 +278,17 @@ textarea {
                     white-space: pre-wrap;
                     overflow-wrap: break-word;
                 }
+            }
+
+            .usedCount {
+                position: absolute;
+                bottom: 0.313rem;
+                right: 0.313rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.125rem;
+                color: var(--white);
             }
         }
     }

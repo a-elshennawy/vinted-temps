@@ -1,4 +1,5 @@
 import { FaCopy, FaCheck } from "react-icons/fa";
+import { IoHeartCircle } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabase";
@@ -73,11 +74,18 @@ function TempsList() {
     return () => supabase.removeChannel(channel);
   }, []);
 
-  const handleCopy = (temp) => {
+  const handleCopy = async (temp) => {
     navigator.clipboard.writeText(temp.body).then(() => {
       setCopiedId(temp.id);
       setTimeout(() => setCopiedId(null), 2000);
     });
+
+    // increase temp popularity in supabase by 1
+    const updatedPopularity = temp.popularity + 1;
+    await supabase
+      .from("templates")
+      .update({ popularity: updatedPopularity })
+      .eq("id", temp.id);
 
     setToastShow(true);
     setTimeout(() => setToastShow(false), 2000);
@@ -158,6 +166,12 @@ function TempsList() {
               <div className="body">
                 <p>{temp.body}</p>
               </div>
+              {temp.popularity > 0 && (
+                <div className="usedCount">
+                  {temp.popularity}
+                  <IoHeartCircle size={24} color="var(--white)" />
+                </div>
+              )}
             </div>
           ))}
         </div>
