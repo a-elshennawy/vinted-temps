@@ -99,6 +99,33 @@ textarea {
     width: 100%;
 }
 
+.tabSwitch {
+    display: flex;
+    gap: 0.5rem;
+
+    button {
+        background-color: var(--first);
+        color: var(--white);
+        text-transform: capitalize;
+        border: none;
+        padding: 0.313rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.313rem;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .activeTab {
+        transform: scale(1.05);
+        background-color: var(--white);
+        color: var(--first);
+        box-shadow: 0 0 0.313rem var(--first);
+        transition: all 0.3s ease-in-out;
+    }
+}
+
 .counterComp {
     padding: 0.625rem 0rem;
     display: flex;
@@ -158,7 +185,7 @@ textarea {
         display: flex;
         align-items: center;
         gap: 0.313rem;
-        background: linear-gradient(45deg, var(--first), var(--second));
+        background-color: var(--first);
         padding: 0rem 0.25rem;
         border-radius: 0.625rem;
 
@@ -221,6 +248,13 @@ textarea {
     }
 }
 
+.rephraseTool {
+    padding: 0.625rem 0rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
 .tempsList {
     position: relative;
     padding: 0.625rem 0rem;
@@ -241,6 +275,7 @@ textarea {
             flex-direction: column;
             gap: 0.25rem;
             border-radius: 0.5rem;
+            overflow: hidden;
             background-color: var(--first);
 
             h5,
@@ -268,6 +303,17 @@ textarea {
                     span {
                         cursor: pointer;
                     }
+
+                    .copyBtn {
+                        color: var(--first);
+                        background-color: var(--white);
+                        padding: 0.125rem;
+                        border-radius: 0.313rem;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 0.125rem;
+                    }
                 }
             }
 
@@ -281,14 +327,17 @@ textarea {
             }
 
             .usedCount {
+                background-color: var(--white);
                 position: absolute;
-                bottom: 0.313rem;
-                right: 0.313rem;
+                bottom: 0.125rem;
+                right: 0.125rem;
+                padding: 0.25rem;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 gap: 0.125rem;
-                color: var(--white);
+                border-radius: 0.5rem;
+                color: var(--first);
             }
         }
     }
@@ -354,4 +403,10 @@ textarea {
 
 ::-webkit-scrollbar {
     display: none;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

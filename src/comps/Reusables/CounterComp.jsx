@@ -4,9 +4,6 @@ import { VscDebugStart } from "react-icons/vsc";
 import { IoExitOutline, IoTicketOutline } from "react-icons/io5";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import correctIcon from "../../assets/imgs/correct.png";
-import incSound from "../../assets/wow.mp3";
-import decSound from "../../assets/faaah.mp3";
-import endShiftSound from "../../assets/bruh.mp3";
 import WaitingShift from "./UI/WaitingShift";
 
 function CounterComp() {
@@ -71,7 +68,6 @@ function CounterComp() {
   };
 
   const handleEndShift = () => {
-    playSound(endShiftSound);
     setIsShiftActive(false);
     setCurrentCount(0);
     setLogs([]);
@@ -81,18 +77,12 @@ function CounterComp() {
     localStorage.removeItem("lastCheckedHour");
   };
 
-  const playSound = (src) => {
-    new Audio(src).play();
-  };
-
   const increment = () => {
     setCurrentCount((prev) => prev + 1);
-    playSound(incSound);
   };
 
   const decrement = () => {
     setCurrentCount((prev) => (prev > 0 ? prev - 1 : 0));
-    playSound(decSound);
   };
 
   const totalTickets =

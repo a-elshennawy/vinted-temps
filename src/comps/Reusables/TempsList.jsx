@@ -145,12 +145,18 @@ function TempsList() {
                   <span
                     onClick={() => handleCopy(temp)}
                     style={{ cursor: "pointer" }}
-                    title="Copy"
+                    className="copyBtn"
                   >
                     {copiedId === temp.id ? (
-                      <FaCheck color="var(--white)" />
+                      <>
+                        Copied
+                        <FaCheck color="var(--first)" />
+                      </>
                     ) : (
-                      <FaCopy color="var(--white)" />
+                      <>
+                        Copy
+                        <FaCopy color="var(--first)" />
+                      </>
                     )}
                   </span>
                   {isLoggedIn && (
@@ -169,7 +175,7 @@ function TempsList() {
               {temp.popularity > 0 && (
                 <div className="usedCount">
                   {temp.popularity}
-                  <IoHeartCircle size={24} color="var(--white)" />
+                  <IoHeartCircle size={24} color="var(--first)" />
                 </div>
               )}
             </div>

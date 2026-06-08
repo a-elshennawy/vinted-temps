@@ -6,8 +6,12 @@ import useMobile from "../Hooks/useMobile";
 import { AnimatePresence, motion as Motion } from "motion/react";
 import correctIcon from "../../assets/imgs/correct.png";
 import CounterComp from "./CounterComp";
+import RephraseTool from "./RephraseTool";
+import { RiGeminiFill } from "react-icons/ri";
+import { ImTicket } from "react-icons/im";
 
 function InputComp() {
+  const [whatComp, setWhatComp] = useState("counterComp");
   const [tempTitle, setTempTitle] = useState("");
   const [tempBody, setTempBody] = useState("");
   const [loading, setLoading] = useState(false);
@@ -101,7 +105,22 @@ function InputComp() {
         </button>
       </div>
       <div className="greenLine"></div>
-      <CounterComp />
+      <div className="tabSwitch">
+        <button
+          onClick={() => setWhatComp("counterComp")}
+          className={`${whatComp === "counterComp" ? "activeTab" : ""}`}
+        >
+          counter <ImTicket />
+        </button>
+        <button
+          onClick={() => setWhatComp("rephraseTool")}
+          className={`${whatComp === "rephraseTool" ? "activeTab" : ""}`}
+        >
+          rephrase <RiGeminiFill />
+        </button>
+      </div>
+      {whatComp === "rephraseTool" && <RephraseTool />}
+      {whatComp === "counterComp" && <CounterComp />}
     </div>
   );
 }
