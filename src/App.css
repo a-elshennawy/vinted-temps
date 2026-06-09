@@ -101,27 +101,31 @@ textarea {
 
 .tabSwitch {
     display: flex;
-    gap: 0.5rem;
 
     button {
-        background-color: var(--first);
-        color: var(--white);
+        background-color: var(--white);
+        color: var(--first);
         text-transform: capitalize;
-        border: none;
+        border: 0.063rem solid var(--first);
         padding: 0.313rem;
-        border-radius: 0.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 0.313rem;
         transition: all 0.3s ease-in-out;
+
+        &:first-child {
+            border-radius: 0.5rem 0rem 0rem 0.5rem;
+        }
+
+        &:last-child {
+            border-radius: 0rem 0.5rem 0.5rem 0rem;
+        }
     }
 
     .activeTab {
-        transform: scale(1.05);
-        background-color: var(--white);
-        color: var(--first);
-        box-shadow: 0 0 0.313rem var(--first);
+        background-color: var(--first);
+        color: var(--white);
         transition: all 0.3s ease-in-out;
     }
 }
@@ -253,6 +257,84 @@ textarea {
     display: flex;
     justify-content: start;
     align-items: center;
+
+    .originalReply {
+        .charCount {
+            background-color: var(--first);
+            color: var(--white);
+            border-radius: 0.5rem;
+            width: fit-content;
+            padding: 0.25rem;
+        }
+    }
+
+    .actions {
+        display: flex;
+        gap: 0.313rem;
+
+        button {
+            background-color: var(--first);
+            color: var(--white);
+            border: none;
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            text-transform: capitalize;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .disabledBtn {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+
+    .error {
+        background-color: var(--error);
+        color: var(--white);
+        width: fit-content;
+        border-radius: 0.5rem;
+    }
+
+    .outputDev {
+        background-color: var(--first);
+        color: var(--white);
+        border-radius: 0.5rem;
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h5 {
+                color: var(--white) !important;
+            }
+
+            button {
+                background-color: transparent;
+                border: none;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                color: var(--white);
+                text-transform: capitalize;
+            }
+        }
+
+        .line {
+            background-color: var(--second);
+            height: 0.125rem;
+            width: 100%;
+        }
+    }
+}
+
+.workingComp {
+    img {
+        width: 70%;
+    }
 }
 
 .tempsList {
@@ -265,7 +347,7 @@ textarea {
     .temps {
         overflow-y: scroll;
         min-height: 6.26rem;
-        max-height: 46.875rem;
+        max-height: 48.75rem;
 
         .temp {
             position: relative;
@@ -303,17 +385,6 @@ textarea {
                     span {
                         cursor: pointer;
                     }
-
-                    .copyBtn {
-                        color: var(--first);
-                        background-color: var(--white);
-                        padding: 0.125rem;
-                        border-radius: 0.313rem;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        gap: 0.125rem;
-                    }
                 }
             }
 
@@ -331,7 +402,7 @@ textarea {
                 position: absolute;
                 bottom: 0.125rem;
                 right: 0.125rem;
-                padding: 0.25rem;
+                padding: 0.125rem;
                 display: flex;
                 justify-content: center;
                 align-items: center;

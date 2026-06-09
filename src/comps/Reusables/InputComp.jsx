@@ -9,6 +9,8 @@ import CounterComp from "./CounterComp";
 import RephraseTool from "./RephraseTool";
 import { RiGeminiFill } from "react-icons/ri";
 import { ImTicket } from "react-icons/im";
+import { CgPerformance } from "react-icons/cg";
+import Working from "./UI/Working";
 
 function InputComp() {
   const [whatComp, setWhatComp] = useState("counterComp");
@@ -118,9 +120,16 @@ function InputComp() {
         >
           rephrase <RiGeminiFill />
         </button>
+        <button
+          onClick={() => setWhatComp("performance")}
+          className={`${whatComp === "performance" ? "activeTab" : ""}`}
+        >
+          performance <CgPerformance />
+        </button>
       </div>
       {whatComp === "rephraseTool" && <RephraseTool />}
       {whatComp === "counterComp" && <CounterComp />}
+      {whatComp === "performance" && <Working />}
     </div>
   );
 }

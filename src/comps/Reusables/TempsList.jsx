@@ -145,17 +145,14 @@ function TempsList() {
                   <span
                     onClick={() => handleCopy(temp)}
                     style={{ cursor: "pointer" }}
-                    className="copyBtn"
                   >
                     {copiedId === temp.id ? (
                       <>
-                        Copied
-                        <FaCheck color="var(--first)" />
+                        <FaCheck color="var(--white)" />
                       </>
                     ) : (
                       <>
-                        Copy
-                        <FaCopy color="var(--first)" />
+                        <FaCopy color="var(--white)" />
                       </>
                     )}
                   </span>

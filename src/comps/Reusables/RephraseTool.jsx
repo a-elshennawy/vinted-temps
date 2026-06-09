@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { CiRedo } from "react-icons/ci";
+import BtnLoader from "./UI/BtnLoader";
+import { FaCheck, FaCopy } from "react-icons/fa";
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
@@ -73,53 +76,63 @@ export default function RephraseTool() {
 
   return (
     <>
-      <h3>coming soon, i guess</h3>
+      <div className="rephraseTool">
+        <div>
+          <div className="originalReply">
+            <textarea
+              placeholder="Paste the reply you want to rephrase..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              rows={5}
+              cols={50}
+            />
+          </div>
+
+          <div className="actions py-2">
+            <button
+              onClick={rephrase}
+              disabled={loading || !input.trim()}
+              className={loading || !input.trim() ? "disabledBtn" : ""}
+            >
+              {loading ? (
+                <>
+                  Rephrasing <BtnLoader />
+                </>
+              ) : (
+                <>
+                  <CiRedo /> rephrase
+                </>
+              )}
+            </button>
+            {(input || output) && <button onClick={clear}>Clear</button>}
+          </div>
+
+          {error && <div className="error p-1 my-1">{error}</div>}
+
+          {output && (
+            <div className="outputDev p-2">
+              <div className="header">
+                <h5>rephrased</h5>
+                <button onClick={copyToClipboard}>
+                  {copied ? (
+                    <>
+                      copied
+                      <FaCheck color="var(--white)" />
+                    </>
+                  ) : (
+                    <>
+                      copy
+                      <FaCopy color="var(--white)" />
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="line my-1"></div>
+              <div>{output}</div>
+            </div>
+          )}
+        </div>
+      </div>
     </>
-    // <div className="rephraseTool">
-    //   <div>
-    //     {/* Input */}
-    //     <div>
-    //       <label>Original Reply</label>
-    //       <textarea
-    //         placeholder="Paste the reply you want to rephrase..."
-    //         value={input}
-    //         onChange={(e) => setInput(e.target.value)}
-    //         rows={5}
-    //       />
-    //       <div>{input.length} characters</div>
-    //     </div>
-
-    //     {/* Actions */}
-    //     <div>
-    //       <button onClick={rephrase} disabled={loading || !input.trim()}>
-    //         {loading ? (
-    //           <span>
-    //             <span />
-    //             Rephrasing...
-    //           </span>
-    //         ) : (
-    //           "↻ Rephrase"
-    //         )}
-    //       </button>
-    //       {(input || output) && <button onClick={clear}>Clear</button>}
-    //     </div>
-
-    //     {/* Error */}
-    //     {error && <div>⚠ {error}</div>}
-
-    //     {/* Output */}
-    //     {output && (
-    //       <div>
-    //         <div>
-    //           <label>Rephrased</label>
-    //           <button onClick={copyToClipboard}>
-    //             {copied ? "✓ Copied!" : "Copy"}
-    //           </button>
-    //         </div>
-    //         <div>{output}</div>
-    //       </div>
-    //     )}
-    //   </div>
-    // </div>
   );
 }
