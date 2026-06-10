@@ -2,8 +2,9 @@ import { useState } from "react";
 import { CiRedo } from "react-icons/ci";
 import BtnLoader from "./UI/BtnLoader";
 import { FaCheck, FaCopy } from "react-icons/fa";
+import useMobile from "../Hooks/useMobile";
 
-const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+// const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
 export default function RephraseTool() {
   const [input, setInput] = useState("");
@@ -11,6 +12,7 @@ export default function RephraseTool() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
+  const isMobile = useMobile();
 
   const rephrase = async () => {
     if (!input.trim()) return;
@@ -21,29 +23,14 @@ export default function RephraseTool() {
 
     try {
       const response = await fetch(
-        "https://api.groq.com/openai/v1/chat/completions",
+        "https://vinted-rephrase.ahmedshennawy997.workers.dev",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${GROQ_API_KEY}`,
+            // Authorization: `Bearer ${GROQ_API_KEY}`,
           },
-          body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
-            messages: [
-              {
-                role: "system",
-                content:
-                  "You are a customer support assistant for a shipping and delivery company called Vinted. Your only job is to rephrase the reply the agent gives you. Keep the same meaning and information, but make it sound more professional, clear, and friendly. Return only the rephrased text with no explanations, no options, no extra commentary.",
-              },
-              {
-                role: "user",
-                content: input,
-              },
-            ],
-            temperature: 0.5,
-            max_tokens: 512,
-          }),
+          body: JSON.stringify({ text: input }),
         },
       );
 
@@ -53,7 +40,7 @@ export default function RephraseTool() {
         throw new Error(data.error?.message || "Something went wrong");
       }
 
-      setOutput(data.choices[0].message.content.trim());
+      setOutput(data.rephrased);
     } catch (err) {
       setError(err.message || "Failed to rephrase. Check your API key.");
     } finally {
@@ -84,7 +71,7 @@ export default function RephraseTool() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               rows={5}
-              cols={50}
+              cols={isMobile ? 30 : 50}
             />
           </div>
 
