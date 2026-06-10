@@ -71,7 +71,7 @@ export default function RephraseTool() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               rows={5}
-              cols={isMobile ? 30 : 50}
+              cols={isMobile ? 30 : 40}
             />
           </div>
 
@@ -103,12 +103,10 @@ export default function RephraseTool() {
                 <button onClick={copyToClipboard}>
                   {copied ? (
                     <>
-                      copied
                       <FaCheck color="var(--white)" />
                     </>
                   ) : (
                     <>
-                      copy
                       <FaCopy color="var(--white)" />
                     </>
                   )}
