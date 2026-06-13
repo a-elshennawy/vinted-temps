@@ -8,9 +8,10 @@ import correctIcon from "../../assets/imgs/correct.png";
 import CounterComp from "./CounterComp";
 import RephraseTool from "./RephraseTool";
 import { RiGeminiFill } from "react-icons/ri";
-import { ImTicket } from "react-icons/im";
 import { CgPerformance } from "react-icons/cg";
-import Working from "./UI/Working";
+// import Working from "./UI/Working";
+import Performance from "./Performance";
+import { BiSolidMessageRoundedCheck } from "react-icons/bi";
 
 function InputComp() {
   const [whatComp, setWhatComp] = useState("counterComp");
@@ -112,7 +113,7 @@ function InputComp() {
           onClick={() => setWhatComp("counterComp")}
           className={`${whatComp === "counterComp" ? "activeTab" : ""}`}
         >
-          counter <ImTicket />
+          counter <BiSolidMessageRoundedCheck />
         </button>
         <button
           onClick={() => setWhatComp("rephraseTool")}
@@ -129,7 +130,7 @@ function InputComp() {
       </div>
       {whatComp === "rephraseTool" && <RephraseTool />}
       {whatComp === "counterComp" && <CounterComp />}
-      {whatComp === "performance" && <Working />}
+      {whatComp === "performance" && <Performance />}
     </div>
   );
 }

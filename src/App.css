@@ -1,11 +1,21 @@
 @import url("./fonts.css");
 
 :root {
+    font-size: 16px;
     --white: #fff;
     --black: #000;
     --first: #007782;
     --second: #66adb4;
     --error: #ff2c2c;
+    --warning: #ffc107;
+    --success: #00ff1b;
+
+    /* shift status */
+    --live: #00ff1b;
+    --break: #fffd00;
+    --lunch: #ff9800;
+    --training: #00b8ff;
+    --meeting: #ff0000;
 }
 
 * {
@@ -131,11 +141,77 @@ textarea {
 }
 
 .counterComp {
-    padding: 0.625rem 0rem;
+    padding: 0.313rem 0rem;
     display: flex;
     justify-content: start;
     align-items: center;
     flex-direction: column;
+
+    .targetInput {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.313rem;
+
+        label {
+            color: var(--first);
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        input {
+            text-align: center;
+            width: 6.25rem;
+            font-size: 1.25rem;
+        }
+    }
+
+    .targetNote {
+        display: flex;
+        align-items: center;
+        gap: 0.313rem;
+        text-transform: capitalize;
+        font-weight: bold;
+        color: var(--first);
+
+        img {
+            width: 1.5rem;
+        }
+    }
+
+    .line {
+        height: 0.063rem;
+        width: 80%;
+        background-color: var(--first);
+    }
+
+    .statusSelector {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        button {
+            background-color: var(--white);
+            color: var(--first);
+            border: 0.063rem solid var(--first);
+            padding: 0.313rem 0.5rem;
+            text-transform: capitalize;
+
+            &:first-child {
+                border-radius: 0.5rem 0rem 0rem 0.5rem;
+            }
+
+            &:last-child {
+                border-radius: 0rem 0.5rem 0.5rem 0rem;
+            }
+        }
+
+        .activeStatus {
+            background-color: var(--first);
+            color: var(--white);
+        }
+    }
 
     .startBtn {
         padding: 0.313rem 0.5rem;
@@ -166,8 +242,8 @@ textarea {
         }
 
         button {
-            background-color: var(--white);
-            color: var(--first);
+            background-color: var(--first);
+            color: var(--white);
             border: none;
             display: flex;
             justify-content: center;
@@ -175,45 +251,41 @@ textarea {
             height: 3.125rem;
             width: 3.125rem;
             padding: 1.25rem 0.313rem;
-            border-radius: 0rem 1.25rem 1.25rem 0rem;
             font-size: 5rem;
             font-weight: bold;
-
-            &:last-child {
-                border-radius: 1.25rem 0rem 0rem 1.25rem;
-            }
         }
     }
 
-    .currentTotal {
+    .currentStatus {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 0.313rem;
         background-color: var(--first);
-        padding: 0rem 0.25rem;
         border-radius: 0.625rem;
+        padding: 0.25rem;
 
         span {
-            font-size: 1.563rem;
+            font-size: 1.25rem;
             text-transform: capitalize;
             color: var(--white);
         }
 
         img {
-            width: 1.563rem;
+            width: 1.5rem;
         }
-    }
 
-    .endBtn {
-        background-color: var(--error);
-        color: var(--white);
-        border: none;
-        border-radius: 0.625rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.313rem;
-        padding: 0.313rem 0.5rem;
+        .endBtn {
+            background-color: var(--error);
+            color: var(--white);
+            border: none;
+            border-radius: 0.625rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.313rem;
+            padding: 0.313rem;
+        }
     }
 
     .logs {
@@ -227,18 +299,24 @@ textarea {
             background-color: var(--first);
             color: var(--white);
             border-radius: 0.625rem;
-            padding: 0.25rem 0.313rem;
+            padding: 0.313rem;
             overflow: hidden;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.313rem;
+            gap: 0;
+
+            .line {
+                background-color: var(--second);
+                height: 0.063rem;
+                width: 100%;
+            }
 
             .logRange {
                 background-color: var(--second);
                 font-size: 1rem;
-                padding: 0.313rem;
+                padding: 0.25rem;
                 border-radius: 0.313rem;
             }
 
@@ -247,6 +325,33 @@ textarea {
                 display: flex;
                 align-items: center;
                 gap: 0.313rem;
+                text-transform: capitalize;
+            }
+
+            .logPerformance {
+                width: 100%;
+
+                .progressBar {
+                    background-color: var(--second);
+                    border-radius: 0.313rem;
+                    height: 0.25rem;
+
+                    .progress {
+                        height: 0.25rem;
+                    }
+
+                    .red {
+                        background-color: var(--error);
+                    }
+
+                    .warning {
+                        background-color: var(--warning);
+                    }
+
+                    .success {
+                        background-color: var(--success);
+                    }
+                }
             }
         }
     }
@@ -347,7 +452,7 @@ textarea {
     .temps {
         overflow-y: scroll;
         min-height: 6.26rem;
-        max-height: 48.75rem;
+        max-height: 50rem;
 
         .temp {
             position: relative;
@@ -472,12 +577,19 @@ textarea {
     text-align: center;
 }
 
-::-webkit-scrollbar {
-    display: none;
+.chart {
+    background-color: var(--second);
+    border-radius: 0.313rem;
+
+    svg text {
+        fill: var(--black) !important;
+    }
+
+    .domainAndTicks line {
+        stroke: var(--black) !important;
+    }
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+::-webkit-scrollbar {
+    display: none;
 }
