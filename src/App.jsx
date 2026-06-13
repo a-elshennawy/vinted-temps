@@ -7,6 +7,16 @@ const Home = lazy(() => import("./Pages/Home/Home"));
 const Auth = lazy(() => import("./Pages/Auth/Auth"));
 const Pending = lazy(() => import("./Pages/Pending/Pending"));
 
+// fresh sessions always
+const APP_VERSION = "1.0.0";
+
+if (localStorage.getItem("appVersion") !== APP_VERSION) {
+  localStorage.clear();
+  sessionStorage.clear();
+  localStorage.setItem("appVersion", APP_VERSION);
+  window.location.reload();
+}
+
 function App() {
   return (
     <>
