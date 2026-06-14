@@ -140,11 +140,11 @@ textarea {
     }
 }
 
-.counterComp {
+.preShiftComp {
     padding: 0.313rem 0rem;
     display: flex;
     justify-content: start;
-    align-items: start;
+    align-items: center;
     flex-direction: column;
 
     .targetInput {
@@ -166,6 +166,29 @@ textarea {
             font-size: 1.25rem;
         }
     }
+
+    .startBtn {
+        padding: 0.313rem 0.5rem;
+        background-color: var(--first);
+        color: var(--white);
+        border: none;
+        border-radius: 0.625rem;
+        text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.313rem;
+        justify-self: center;
+        align-self: center;
+    }
+}
+
+.counterComp {
+    padding: 0.313rem 0rem;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
 
     .targetNote {
         display: flex;
@@ -211,21 +234,6 @@ textarea {
             background-color: var(--first);
             color: var(--white);
         }
-    }
-
-    .startBtn {
-        padding: 0.313rem 0.5rem;
-        background-color: var(--first);
-        color: var(--white);
-        border: none;
-        border-radius: 0.625rem;
-        text-transform: capitalize;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.313rem;
-        justify-self: center;
-        align-self: center;
     }
 
     .mainCounter {

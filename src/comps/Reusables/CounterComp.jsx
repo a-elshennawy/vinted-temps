@@ -228,7 +228,7 @@ function CounterComp() {
 
   if (!isShiftActive) {
     return (
-      <div className="counterComp p-0 text-center">
+      <div className="preShiftComp p-0">
         <WaitingShift />
         <div className="targetInput mb-1">
           <label>Hourly Target</label>
@@ -246,7 +246,7 @@ function CounterComp() {
   }
 
   return (
-    <div className="counterComp">
+    <div className="counterComp" style={{ alignItems: "start !important" }}>
       <span className="targetNote mb-1">
         {hourlyTarget} replies <img src={hourIcon} alt="" />
       </span>

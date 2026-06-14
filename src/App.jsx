@@ -8,7 +8,7 @@ const Auth = lazy(() => import("./Pages/Auth/Auth"));
 const Pending = lazy(() => import("./Pages/Pending/Pending"));
 
 // fresh sessions always
-const APP_VERSION = "1.0.1";
+const APP_VERSION = "1.0.3";
 
 if (localStorage.getItem("appVersion") !== APP_VERSION) {
   localStorage.clear();
