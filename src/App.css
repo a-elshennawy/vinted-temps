@@ -144,7 +144,7 @@ textarea {
     padding: 0.313rem 0rem;
     display: flex;
     justify-content: start;
-    align-items: center;
+    align-items: start;
     flex-direction: column;
 
     .targetInput {
