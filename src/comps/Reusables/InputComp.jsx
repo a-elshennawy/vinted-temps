@@ -12,6 +12,7 @@ import { CgPerformance } from "react-icons/cg";
 // import Working from "./UI/Working";
 import Performance from "./Performance";
 import { BiSolidMessageRoundedCheck } from "react-icons/bi";
+import { FaCopy } from "react-icons/fa";
 
 function InputComp() {
   const [whatComp, setWhatComp] = useState("counterComp");
@@ -51,64 +52,13 @@ function InputComp() {
 
   return (
     <div className="inpComp col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12">
-      <AnimatePresence>
-        {toastShow && (
-          <Motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="submitToast"
-          >
-            sent for approval <img src={correctIcon} alt="icon" />
-          </Motion.span>
-        )}
-      </AnimatePresence>
-
-      <div className="inputField">
-        <label>template title</label>
-        <input
-          type="text"
-          placeholder="template title"
-          value={tempTitle}
-          onChange={(e) => setTempTitle(e.target.value)}
-          required
-        />
-      </div>
-
-      <div className="inputField">
-        <label>template body</label>
-        <textarea
-          cols={isMobile ? 30 : 40}
-          rows={5}
-          placeholder="template body"
-          value={tempBody}
-          onChange={(e) => setTempBody(e.target.value)}
-          required
-        />
-      </div>
-
-      {error && <p style={{ color: "red", fontSize: "0.85rem" }}>{error}</p>}
-
-      <div className="btnsField">
-        <button
-          className={`${loading || !tempTitle.trim() || !tempBody.trim() ? "disabledBtn" : ""}`}
-          onClick={handleSave}
-          disabled={loading || !tempTitle.trim() || !tempBody.trim()}
-        >
-          {loading ? (
-            <>
-              adding <BtnLoader />
-            </>
-          ) : (
-            <>
-              add <CiBookmarkCheck size={20} />
-            </>
-          )}
-        </button>
-      </div>
-      <div className="greenLine"></div>
       <div className="tabSwitch">
+        <button
+          onClick={() => setWhatComp("tempInput")}
+          className={`${whatComp === "tempInput" ? "activeTab" : ""}`}
+        >
+          Add <FaCopy />
+        </button>
         <button
           onClick={() => setWhatComp("counterComp")}
           className={`${whatComp === "counterComp" ? "activeTab" : ""}`}
@@ -131,6 +81,68 @@ function InputComp() {
       {whatComp === "rephraseTool" && <RephraseTool />}
       {whatComp === "counterComp" && <CounterComp />}
       {whatComp === "performance" && <Performance />}
+      {whatComp === "tempInput" && (
+        <>
+          <AnimatePresence>
+            {toastShow && (
+              <Motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="submitToast"
+              >
+                sent for approval <img src={correctIcon} alt="icon" />
+              </Motion.span>
+            )}
+          </AnimatePresence>
+
+          <div className="inputField">
+            <label>template title</label>
+            <input
+              type="text"
+              placeholder="template title"
+              value={tempTitle}
+              onChange={(e) => setTempTitle(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="inputField">
+            <label>template body</label>
+            <textarea
+              cols={isMobile ? 30 : 40}
+              rows={5}
+              placeholder="template body"
+              value={tempBody}
+              onChange={(e) => setTempBody(e.target.value)}
+              required
+            />
+          </div>
+
+          {error && (
+            <p style={{ color: "red", fontSize: "0.85rem" }}>{error}</p>
+          )}
+
+          <div className="btnsField">
+            <button
+              className={`${loading || !tempTitle.trim() || !tempBody.trim() ? "disabledBtn" : ""}`}
+              onClick={handleSave}
+              disabled={loading || !tempTitle.trim() || !tempBody.trim()}
+            >
+              {loading ? (
+                <>
+                  adding <BtnLoader />
+                </>
+              ) : (
+                <>
+                  add <CiBookmarkCheck size={20} />
+                </>
+              )}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
