@@ -9,6 +9,7 @@
     --error: #ff2c2c;
     --warning: #ffc107;
     --success: #00ff1b;
+    --green: #0f9d58;
 
     /* shift status */
     --live: #00ff1b;
@@ -183,6 +184,20 @@ textarea {
     }
 }
 
+.openSheetBtn {
+    background-color: var(--green);
+    color: var(--white);
+    border: none;
+    padding: 0.313rem;
+    border-radius: 0.5rem;
+    text-transform: capitalize;
+    margin-top: 0.313rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.125rem;
+}
+
 .counterComp {
     padding: 0.313rem 0rem;
     display: flex;
@@ -190,16 +205,23 @@ textarea {
     align-items: start;
     flex-direction: column;
 
-    .targetNote {
+    .head {
         display: flex;
         align-items: center;
+        justify-content: start;
         gap: 0.313rem;
-        text-transform: capitalize;
-        font-weight: bold;
-        color: var(--first);
 
-        img {
-            width: 1.5rem;
+        .targetNote {
+            display: flex;
+            align-items: center;
+            gap: 0.313rem;
+            text-transform: capitalize;
+            font-weight: bold;
+            color: var(--first);
+
+            img {
+                width: 1.5rem;
+            }
         }
     }
 
@@ -298,7 +320,7 @@ textarea {
 
     .logs {
         display: flex;
-        justify-content: center;
+        justify-content: start;
         align-items: start;
         flex-wrap: wrap;
         gap: 0.313rem;

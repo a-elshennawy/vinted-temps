@@ -9,15 +9,29 @@ import { FaHome } from "react-icons/fa";
 import errorIcon from "../../assets/imgs/cancel.png";
 
 function Auth() {
+  const [logType, setLogType] = useState("admin");
+
+  // agent login
+  const [vintedEmail, setVintedEmail] = useState("");
+  const [vintedId, setVintedId] = useState("");
+
+  // admin login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
   const [error, setError] = useState(null);
   const [toastShow, setToastShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handlelogin = async (e) => {
+  const showError = (msg) => {
+    setError(msg);
+    setToastShow(true);
+    setTimeout(() => setToastShow(false), 2000);
+  };
+
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -28,20 +42,43 @@ function Auth() {
     });
 
     if (error) {
-      console.error("error logging in:", error.message);
-      setError(error.message);
-      setToastShow(true);
-      setTimeout(() => {
-        setToastShow(false);
-      }, 2000);
+      showError(error.message);
       setLoading(false);
       return;
     }
 
-    if (data.user) {
-      navigate("/");
+    if (data.user) navigate("/");
+    setLoading(false);
+  };
+
+  const handleAgentLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await supabase
+      .from("agents")
+      .select("name, email, vinted_id")
+      .eq("email", vintedEmail.trim().toLowerCase())
+      .eq("vinted_id", vintedId.trim())
+      .single();
+
+    if (error || !data) {
+      showError("No agent found with these credentials.");
+      setLoading(false);
+      return;
     }
 
+    localStorage.setItem(
+      "agentSession",
+      JSON.stringify({
+        name: data.name,
+        email: data.email,
+        vinted_id: data.vinted_id,
+      }),
+    );
+
+    navigate("/");
     setLoading(false);
   };
 
@@ -68,36 +105,84 @@ function Auth() {
           <FaHome size={24} />
         </button>
 
-        <form onSubmit={handlelogin} className="authForm">
-          <h3>admin login</h3>
-          <div className="inputField">
-            <label>email address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
-          </div>
-          <div className="line"></div>
-          <div className="inputField">
-            <label>password</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-            />
-            <span onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? (
-                <RiEyeCloseLine size={20} />
-              ) : (
-                <RiEyeFill size={20} />
-              )}
-            </span>
-          </div>
+        <div className="authSwitcher">
+          <button
+            onClick={() => setLogType("admin")}
+            className={logType === "admin" ? "activeLogType" : ""}
+          >
+            admin login
+          </button>
+          <button
+            onClick={() => setLogType("agent")}
+            className={logType === "agent" ? "activeLogType" : ""}
+          >
+            agent login
+          </button>
+        </div>
+
+        <form
+          onSubmit={logType === "agent" ? handleAgentLogin : handleAdminLogin}
+          className="authForm"
+        >
+          {logType === "agent" && (
+            <>
+              <div className="inputField">
+                <label>vinted email</label>
+                <input
+                  type="email"
+                  value={vintedEmail}
+                  onChange={(e) => setVintedEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+              </div>
+              <div className="line"></div>
+              <div className="inputField">
+                <label>vinted id</label>
+                <input
+                  type="text"
+                  value={vintedId}
+                  onChange={(e) => setVintedId(e.target.value)}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+            </>
+          )}
+
+          {logType === "admin" && (
+            <>
+              <div className="inputField">
+                <label>admin email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+              </div>
+              <div className="line"></div>
+              <div className="inputField">
+                <label>password</label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                />
+                <span onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? (
+                    <RiEyeCloseLine size={20} />
+                  ) : (
+                    <RiEyeFill size={20} />
+                  )}
+                </span>
+              </div>
+            </>
+          )}
+
           <div className="loginField pt-2">
             <button
               type="submit"

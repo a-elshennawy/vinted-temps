@@ -7,6 +7,11 @@ import { FaGripLinesVertical, FaMinus, FaPlus } from "react-icons/fa";
 import { GoDotFill } from "react-icons/go";
 import WaitingShift from "./UI/WaitingShift";
 import hourIcon from "../../assets/imgs/one-hour.png";
+import { BsFileEarmarkSpreadsheetFill } from "react-icons/bs";
+import BtnLoader from "./UI/BtnLoader";
+
+const SHEET_ENDPOINT =
+  "https://script.google.com/macros/s/AKfycbwetjwCxjsIZSvty_XAyEb3DQ02g7l__p-Z5Q3mkSXrUDoMVbzylh-RKg1y3_EqtOC5uw/exec";
 
 const STATUSES = ["live", "break", "lunch", "meeting", "training"];
 const EMPTY_DURATIONS = {
@@ -50,6 +55,12 @@ function CounterComp() {
     const saved = localStorage.getItem("statusStartTime");
     return saved ? parseInt(saved) : Date.now();
   });
+  // Date when the shift started (used as the sheet tab name — never changes mid-shift)
+  const [shiftDate, setShiftDate] = useState(
+    () => localStorage.getItem("shiftDate") || null,
+  );
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   // Refs for interval callbacks
   const currentCountRef = useRef(currentCount);
@@ -58,6 +69,7 @@ function CounterComp() {
   const statusDurationsBaseRef = useRef(statusDurationsBase);
   const statusStartTimeRef = useRef(statusStartTime);
   const lastCheckedHourRef = useRef(lastCheckedHour);
+  const logsRef = useRef(logs);
 
   useEffect(() => {
     currentCountRef.current = currentCount;
@@ -77,6 +89,9 @@ function CounterComp() {
   useEffect(() => {
     lastCheckedHourRef.current = lastCheckedHour;
   }, [lastCheckedHour]);
+  useEffect(() => {
+    logsRef.current = logs;
+  }, [logs]);
 
   const handleStatusChange = (newStatus) => {
     if (newStatus === statusRef.current) return;
@@ -107,6 +122,7 @@ function CounterComp() {
       JSON.stringify(statusDurationsBase),
     );
     localStorage.setItem("statusStartTime", statusStartTime);
+    if (shiftDate) localStorage.setItem("shiftDate", shiftDate);
   }, [
     isShiftActive,
     currentCount,
@@ -117,6 +133,7 @@ function CounterComp() {
     hourlyTarget,
     statusDurationsBase,
     statusStartTime,
+    shiftDate,
   ]);
 
   // Hour boundary check
@@ -136,7 +153,6 @@ function CounterComp() {
         return `${hour} ${period}`;
       };
 
-      // Flush current elapsed into durations before logging
       const elapsed = Math.floor(
         (Date.now() - statusStartTimeRef.current) / 1000,
       );
@@ -148,8 +164,6 @@ function CounterComp() {
 
       const count = currentCountRef.current;
       const target = hourlyTargetRef.current;
-      const liveSeconds = durations.live;
-      const liveMinutes = liveSeconds / 60;
       const nonLiveSeconds = Object.entries(durations)
         .filter(([type]) => type !== "live")
         .reduce((acc, [, sec]) => acc + sec, 0);
@@ -157,6 +171,7 @@ function CounterComp() {
       const adjustedTarget = target - (target / 60) * nonLiveMinutes;
       const performance =
         adjustedTarget > 0 ? Math.round((count / adjustedTarget) * 100) : 100;
+      const liveMinutes = Math.round(durations.live / 60);
 
       setLogs((prev) => [
         ...prev,
@@ -165,7 +180,7 @@ function CounterComp() {
           count,
           durations,
           performance,
-          liveMinutes: Math.round(liveMinutes),
+          liveMinutes,
         },
       ]);
 
@@ -180,9 +195,29 @@ function CounterComp() {
     return () => clearInterval(interval);
   }, [isShiftActive, lastCheckedHour]);
 
+  // ── Sheet submission helper ──────────────────────────────────
+  const submitToSheet = async ({
+    agentName,
+    date,
+    totalReplies,
+    rph,
+    performance,
+  }) => {
+    await fetch(SHEET_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ agentName, date, totalReplies, rph, performance }),
+    });
+  };
+
   const handleStartShift = () => {
+    const today = new Date();
+    const dateStr = today.toISOString().split("T")[0];
+
+    setShiftDate(dateStr);
     setIsShiftActive(true);
-    setLastCheckedHour(new Date().getHours());
+    setLastCheckedHour(today.getHours());
     setCurrentCount(0);
     setLogs([]);
     setEndTime(Date.now() + 9 * 60 * 60 * 1000);
@@ -191,7 +226,80 @@ function CounterComp() {
     setStatusStartTime(Date.now());
   };
 
-  const handleEndShift = () => {
+  const handleEndShift = async () => {
+    setSubmitting(true);
+    setSubmitError(null);
+
+    const elapsed = Math.floor(
+      (Date.now() - statusStartTimeRef.current) / 1000,
+    );
+    const finalDurations = {
+      ...statusDurationsBaseRef.current,
+      [statusRef.current]:
+        (statusDurationsBaseRef.current[statusRef.current] || 0) + elapsed,
+    };
+
+    const finalCurrentCount = currentCountRef.current;
+    const completedLogs = logsRef.current;
+
+    const totalReplies =
+      completedLogs.reduce((acc, log) => acc + log.count, 0) +
+      finalCurrentCount;
+
+    const completedLiveSeconds = completedLogs.reduce(
+      (acc, log) => acc + (log.durations?.live || 0),
+      0,
+    );
+    const currentLiveSeconds = finalDurations.live || 0;
+    const totalLiveSeconds = completedLiveSeconds + currentLiveSeconds;
+    const totalLiveHours = totalLiveSeconds / 3600;
+
+    const rph =
+      totalLiveHours > 0 ? Math.round(totalReplies / totalLiveHours) : 0;
+
+    const completedPerformances = completedLogs.map((log) => log.performance);
+    const target = hourlyTargetRef.current;
+    const nonLiveSeconds = Object.entries(finalDurations)
+      .filter(([type]) => type !== "live")
+      .reduce((acc, [, sec]) => acc + sec, 0);
+    const nonLiveMinutes = nonLiveSeconds / 60;
+    const adjustedTarget = target - (target / 60) * nonLiveMinutes;
+    const currentHourPerf =
+      adjustedTarget > 0
+        ? Math.round((finalCurrentCount / adjustedTarget) * 100)
+        : 100;
+
+    const allPerformances = [...completedPerformances, currentHourPerf];
+    const avgPerformance =
+      allPerformances.length > 0
+        ? Math.round(
+            allPerformances.reduce((a, b) => a + b, 0) / allPerformances.length,
+          )
+        : 0;
+
+    const agentSession = localStorage.getItem("agentSession");
+    let agentName = "Unknown Agent";
+    if (agentSession) {
+      try {
+        agentName = JSON.parse(agentSession).name;
+      } catch (_) {}
+    }
+
+    const dateToUse = shiftDate || new Date().toISOString().split("T")[0];
+
+    try {
+      await submitToSheet({
+        agentName,
+        date: dateToUse,
+        totalReplies,
+        rph,
+        performance: avgPerformance,
+      });
+    } catch (err) {
+      console.error("Sheet submission failed:", err);
+      setSubmitError("Shift ended but couldn't sync to sheet. Ask your TL.");
+    }
+
     setIsShiftActive(false);
     setCurrentCount(0);
     setLogs([]);
@@ -200,6 +308,9 @@ function CounterComp() {
     setHourlyTarget(0);
     setStatusDurationsBase({ ...EMPTY_DURATIONS });
     setStatusStartTime(Date.now());
+    setShiftDate(null);
+    setSubmitting(false);
+
     [
       "isShiftActive",
       "currentCount",
@@ -210,6 +321,7 @@ function CounterComp() {
       "hourlyTarget",
       "statusDurationsBase",
       "statusStartTime",
+      "shiftDate",
     ].forEach((key) => localStorage.removeItem(key));
   };
 
@@ -226,10 +338,29 @@ function CounterComp() {
   const totalTickets =
     logs.reduce((acc, log) => acc + log.count, 0) + currentCount;
 
+  const openPerformanceSheet = async () => {
+    const date = new Date().toISOString().split("T")[0];
+    const res = await fetch(`${SHEET_ENDPOINT}?date=${date}`);
+    const url = await res.text();
+    window.open(url, "_blank");
+  };
+
   if (!isShiftActive) {
     return (
       <div className="preShiftComp p-0">
         <WaitingShift />
+        {submitError && (
+          <p
+            style={{
+              color: "var(--red)",
+              fontSize: "0.8rem",
+              textAlign: "center",
+              marginBottom: "0.5rem",
+            }}
+          >
+            {submitError}
+          </p>
+        )}
         <div className="targetInput mb-1">
           <label>Hourly Target</label>
           <input
@@ -241,15 +372,23 @@ function CounterComp() {
         <button className="startBtn" onClick={handleStartShift}>
           start shift <VscDebugStart size={20} />
         </button>
+        <button className="openSheetBtn" onClick={openPerformanceSheet}>
+          track your performance <BsFileEarmarkSpreadsheetFill size={20} />
+        </button>
       </div>
     );
   }
 
   return (
     <div className="counterComp" style={{ alignItems: "start !important" }}>
-      <span className="targetNote mb-1">
-        {hourlyTarget} replies <img src={hourIcon} alt="" />
-      </span>
+      <div className="head pb-2">
+        <span className="targetNote">
+          {hourlyTarget} replies <img src={hourIcon} alt="" />
+        </span>
+        <button className="openSheetBtn" onClick={openPerformanceSheet}>
+          track your performance <BsFileEarmarkSpreadsheetFill size={20} />
+        </button>
+      </div>
 
       <div className="statusSelector mb-3 mt-1 text-center">
         {STATUSES.map((s) => (
@@ -282,8 +421,22 @@ function CounterComp() {
         <span>{totalTickets}</span>
         <BiSolidMessageRoundedCheck size={24} color="var(--white)" />
         <FaGripLinesVertical size={22} color="var(--white)" />
-        <button className="endBtn" onClick={handleEndShift}>
-          End Shift <IoExitOutline size={20} />
+        <button
+          className="endBtn"
+          onClick={handleEndShift}
+          disabled={submitting}
+          style={{ opacity: submitting ? 0.6 : 1 }}
+        >
+          {submitting ? (
+            <>
+              Syncing
+              <BtnLoader />
+            </>
+          ) : (
+            <>
+              End Shift <IoExitOutline size={20} />
+            </>
+          )}
         </button>
       </div>
 
