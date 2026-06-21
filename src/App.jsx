@@ -6,9 +6,10 @@ import Layout from "./comps/Layout/Layout";
 const Home = lazy(() => import("./Pages/Home/Home"));
 const Auth = lazy(() => import("./Pages/Auth/Auth"));
 const Pending = lazy(() => import("./Pages/Pending/Pending"));
+const Agents = lazy(() => import("./Pages/Agents/Agents"));
 
 // fresh sessions always
-const APP_VERSION = "1.0.3";
+const APP_VERSION = "1.0.5";
 
 if (localStorage.getItem("appVersion") !== APP_VERSION) {
   localStorage.clear();
@@ -25,9 +26,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
+              <Route path="agents" element={<Agents />} />
               <Route path="pending" element={<Pending />} />
             </Route>
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth/:logType" element={<Auth />} />
           </Routes>
         </Suspense>
       </Router>

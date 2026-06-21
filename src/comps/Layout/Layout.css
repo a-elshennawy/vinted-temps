@@ -29,6 +29,33 @@ nav {
         }
     }
 
+    .agentName {
+        background-color: var(--white);
+        color: var(--first);
+        cursor: text;
+        padding: 0.25rem;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.313rem;
+    }
+
+    .toAgentLogin {
+        padding: 0.313rem 0.5rem;
+        background-color: var(--white);
+        color: var(--first);
+        border: none;
+        border-radius: 0.625rem;
+        text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.313rem;
+        justify-self: center;
+        align-self: center;
+    }
+
     .NotificationDot {
         position: absolute;
         top: -0.125rem;

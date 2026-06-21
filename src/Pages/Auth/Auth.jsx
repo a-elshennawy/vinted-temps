@@ -1,6 +1,6 @@
 import "./Auth.css";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RiEyeFill, RiEyeCloseLine } from "react-icons/ri";
 import { supabase } from "../../supabase";
 import BtnLoader from "../../comps/Reusables/UI/BtnLoader";
@@ -9,7 +9,9 @@ import { FaHome } from "react-icons/fa";
 import errorIcon from "../../assets/imgs/cancel.png";
 
 function Auth() {
-  const [logType, setLogType] = useState("admin");
+  const { logType } = useParams();
+  const navigate = useNavigate();
+  const setLogType = (type) => navigate(`/auth/${type}`);
 
   // agent login
   const [vintedEmail, setVintedEmail] = useState("");
@@ -23,7 +25,6 @@ function Auth() {
   const [error, setError] = useState(null);
   const [toastShow, setToastShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const showError = (msg) => {
     setError(msg);
@@ -64,7 +65,7 @@ function Auth() {
       .single();
 
     if (error || !data) {
-      showError("No agent found with these credentials.");
+      showError("Not Added Yet,Contact Support.");
       setLoading(false);
       return;
     }
@@ -81,6 +82,8 @@ function Auth() {
     navigate("/");
     setLoading(false);
   };
+
+  const agentSession = localStorage.getItem("agentSession");
 
   return (
     <>
@@ -106,18 +109,22 @@ function Auth() {
         </button>
 
         <div className="authSwitcher">
-          <button
-            onClick={() => setLogType("admin")}
-            className={logType === "admin" ? "activeLogType" : ""}
-          >
-            admin login
-          </button>
-          <button
-            onClick={() => setLogType("agent")}
-            className={logType === "agent" ? "activeLogType" : ""}
-          >
-            agent login
-          </button>
+          {!agentSession && (
+            <>
+              <button
+                onClick={() => setLogType("admin")}
+                className={logType === "admin" ? "activeLogType" : ""}
+              >
+                admin login
+              </button>
+              <button
+                onClick={() => setLogType("agent")}
+                className={logType === "agent" ? "activeLogType" : ""}
+              >
+                agent login
+              </button>
+            </>
+          )}
         </div>
 
         <form

@@ -147,6 +147,7 @@ textarea {
     justify-content: start;
     align-items: center;
     flex-direction: column;
+    gap: 0.313rem;
 
     .targetInput {
         display: flex;
@@ -168,7 +169,8 @@ textarea {
         }
     }
 
-    .startBtn {
+    .startBtn,
+    .toAgentLogin {
         padding: 0.313rem 0.5rem;
         background-color: var(--first);
         color: var(--white);

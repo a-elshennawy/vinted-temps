@@ -9,6 +9,9 @@ import WaitingShift from "./UI/WaitingShift";
 import hourIcon from "../../assets/imgs/one-hour.png";
 import { BsFileEarmarkSpreadsheetFill } from "react-icons/bs";
 import BtnLoader from "./UI/BtnLoader";
+import { Link } from "react-router-dom";
+import { IoMdLogIn } from "react-icons/io";
+import { useCallback } from "react";
 
 const SHEET_ENDPOINT =
   "https://script.google.com/macros/s/AKfycbwetjwCxjsIZSvty_XAyEb3DQ02g7l__p-Z5Q3mkSXrUDoMVbzylh-RKg1y3_EqtOC5uw/exec";
@@ -69,6 +72,7 @@ function CounterComp() {
   const statusDurationsBaseRef = useRef(statusDurationsBase);
   const statusStartTimeRef = useRef(statusStartTime);
   const lastCheckedHourRef = useRef(lastCheckedHour);
+  const shiftDateRef = useRef(shiftDate);
   const logsRef = useRef(logs);
 
   useEffect(() => {
@@ -92,6 +96,9 @@ function CounterComp() {
   useEffect(() => {
     logsRef.current = logs;
   }, [logs]);
+  useEffect(() => {
+    shiftDateRef.current = shiftDate;
+  }, [shiftDate]);
 
   const handleStatusChange = (newStatus) => {
     if (newStatus === statusRef.current) return;
@@ -107,6 +114,19 @@ function CounterComp() {
     setStatusStartTime(() => Date.now());
     setStatus(newStatus);
   };
+
+  useEffect(() => {
+    if (!isShiftActive) return;
+    if (status !== "break" && status !== "lunch") return;
+
+    const limit = status === "break" ? 15 * 60 * 1000 : 30 * 60 * 1000;
+
+    const timer = setTimeout(() => {
+      handleStatusChange("live");
+    }, limit);
+
+    return () => clearTimeout(timer);
+  }, [status, isShiftActive]);
 
   // Persist to localStorage
   useEffect(() => {
@@ -135,6 +155,7 @@ function CounterComp() {
     statusStartTime,
     shiftDate,
   ]);
+  const agentSession = localStorage.getItem("agentSession");
 
   // Hour boundary check
   useEffect(() => {
@@ -195,7 +216,6 @@ function CounterComp() {
     return () => clearInterval(interval);
   }, [isShiftActive, lastCheckedHour]);
 
-  // ── Sheet submission helper ──────────────────────────────────
   const submitToSheet = async ({
     agentName,
     date,
@@ -226,7 +246,7 @@ function CounterComp() {
     setStatusStartTime(Date.now());
   };
 
-  const handleEndShift = async () => {
+  const handleEndShift = useCallback(async () => {
     setSubmitting(true);
     setSubmitError(null);
 
@@ -278,28 +298,24 @@ function CounterComp() {
         : 0;
 
     const agentSession = localStorage.getItem("agentSession");
-    let agentName = "Unknown Agent";
     if (agentSession) {
+      const agentName = JSON.parse(agentSession).name;
+      const dateToUse =
+        shiftDateRef.current || new Date().toISOString().split("T")[0];
+
       try {
-        agentName = JSON.parse(agentSession).name;
-      } catch (_) {}
+        await submitToSheet({
+          agentName,
+          date: dateToUse,
+          totalReplies,
+          rph,
+          performance: avgPerformance,
+        });
+      } catch (err) {
+        console.error("Sheet submission failed:", err);
+        setSubmitError("Shift ended but couldn't sync to sheet. Ask your TL.");
+      }
     }
-
-    const dateToUse = shiftDate || new Date().toISOString().split("T")[0];
-
-    try {
-      await submitToSheet({
-        agentName,
-        date: dateToUse,
-        totalReplies,
-        rph,
-        performance: avgPerformance,
-      });
-    } catch (err) {
-      console.error("Sheet submission failed:", err);
-      setSubmitError("Shift ended but couldn't sync to sheet. Ask your TL.");
-    }
-
     setIsShiftActive(false);
     setCurrentCount(0);
     setLogs([]);
@@ -323,7 +339,19 @@ function CounterComp() {
       "statusStartTime",
       "shiftDate",
     ].forEach((key) => localStorage.removeItem(key));
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!isShiftActive || !endTime) return;
+
+    const interval = setInterval(() => {
+      if (Date.now() >= endTime + 10 * 60 * 1000) {
+        handleEndShift();
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [isShiftActive, endTime, handleEndShift]);
 
   const increment = () => {
     if (status !== "live") return;
@@ -366,15 +394,26 @@ function CounterComp() {
           <input
             type="number"
             value={hourlyTarget}
+            min="0"
             onChange={(e) => setHourlyTarget(parseInt(e.target.value) || 0)}
           />
         </div>
         <button className="startBtn" onClick={handleStartShift}>
           start shift <VscDebugStart size={20} />
         </button>
-        <button className="openSheetBtn" onClick={openPerformanceSheet}>
-          track your performance <BsFileEarmarkSpreadsheetFill size={20} />
-        </button>
+        {agentSession ? (
+          <>
+            <button className="openSheetBtn" onClick={openPerformanceSheet}>
+              performance <BsFileEarmarkSpreadsheetFill size={20} />
+            </button>
+          </>
+        ) : (
+          <>
+            <Link className="toAgentLogin" to={`/auth/agent`}>
+              agent login <IoMdLogIn size={20} />
+            </Link>
+          </>
+        )}
       </div>
     );
   }
@@ -385,9 +424,13 @@ function CounterComp() {
         <span className="targetNote">
           {hourlyTarget} replies <img src={hourIcon} alt="" />
         </span>
-        <button className="openSheetBtn" onClick={openPerformanceSheet}>
-          track your performance <BsFileEarmarkSpreadsheetFill size={20} />
-        </button>
+        {agentSession && (
+          <>
+            <button className="openSheetBtn" onClick={openPerformanceSheet}>
+              performance <BsFileEarmarkSpreadsheetFill size={20} />
+            </button>
+          </>
+        )}
       </div>
 
       <div className="statusSelector mb-3 mt-1 text-center">
@@ -400,6 +443,18 @@ function CounterComp() {
             {s}
           </button>
         ))}
+      </div>
+      <div className="pb-2 mb-1">
+        {status === "break" && (
+          <>
+            <p>note: automatically returning live in 15 minutes</p>
+          </>
+        )}
+        {status === "lunch" && (
+          <>
+            <p>note: automatically returning live in 30 minutes</p>
+          </>
+        )}
       </div>
 
       <div className="mainCounter py-2 px-0">
@@ -439,6 +494,11 @@ function CounterComp() {
           )}
         </button>
       </div>
+      {logs.length === 9 && (
+        <div className="endShiftNotice">
+          <p>note : shift will automatically end in 10 minutes</p>
+        </div>
+      )}
 
       <div className="logs">
         <AnimatePresence>

@@ -21,7 +21,7 @@ function Pending() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
-        navigate("/auth");
+        navigate("/auth/admin");
       } else {
         setUser(session.user);
         setLoading(false);
@@ -32,6 +32,8 @@ function Pending() {
   }, [navigate]);
 
   useEffect(() => {
+    if (!user) return;
+
     const fetchTemps = async () => {
       const { data, error } = await supabase
         .from("templates")
@@ -62,10 +64,10 @@ function Pending() {
       )
       .subscribe();
     return () => supabase.removeChannel(channel);
-  }, []);
+  }, [user]);
 
   if (loading || !user) {
-    <Loader />;
+    return <Loader />;
   }
 
   const handleDelete = async (temp) => {
