@@ -10,7 +10,6 @@ const Pending = lazy(() => import("./Pages/Pending/Pending"));
 const Agents = lazy(() => import("./Pages/Agents/Agents"));
 
 function App() {
-  // auto refrsh to match versions
   useAutoRefresh();
   return (
     <>
