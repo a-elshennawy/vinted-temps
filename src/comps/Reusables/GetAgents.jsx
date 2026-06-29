@@ -73,9 +73,7 @@ function GetAgents() {
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>TWWID</th>
             <th>Vinted ID</th>
-            <th>TL</th>
           </tr>
         </thead>
         <tbody>
@@ -83,9 +81,7 @@ function GetAgents() {
             <tr key={agent.id}>
               <td>{agent.name}</td>
               <td>{agent.email}</td>
-              <td>{agent.tww_id}</td>
               <td>{agent.vinted_id}</td>
-              <td>{agent.team_leader}</td>
             </tr>
           ))}
         </tbody>

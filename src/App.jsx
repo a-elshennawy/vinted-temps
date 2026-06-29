@@ -2,23 +2,15 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import MainLoader from "./comps/Reusables/UI/MainLoader";
 import Layout from "./comps/Layout/Layout";
+import { useAutoRefresh } from "./comps/Hooks/useAutoRefresh";
 
 const Home = lazy(() => import("./Pages/Home/Home"));
 const Auth = lazy(() => import("./Pages/Auth/Auth"));
 const Pending = lazy(() => import("./Pages/Pending/Pending"));
 const Agents = lazy(() => import("./Pages/Agents/Agents"));
 
-// fresh sessions always
-const APP_VERSION = "1.0.5";
-
-if (localStorage.getItem("appVersion") !== APP_VERSION) {
-  localStorage.clear();
-  sessionStorage.clear();
-  localStorage.setItem("appVersion", APP_VERSION);
-  window.location.reload();
-}
-
 function App() {
+  useAutoRefresh();
   return (
     <>
       <Router>

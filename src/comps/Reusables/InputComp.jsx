@@ -13,6 +13,8 @@ import { CgPerformance } from "react-icons/cg";
 import Performance from "./Performance";
 import { BiSolidMessageRoundedCheck } from "react-icons/bi";
 import { FaCopy } from "react-icons/fa";
+import BookMarks from "./BookMarks";
+import { IoTicketSharp } from "react-icons/io5";
 
 function InputComp() {
   const [whatComp, setWhatComp] = useState("counterComp");
@@ -77,10 +79,17 @@ function InputComp() {
         >
           performance <CgPerformance />
         </button>
+        <button
+          onClick={() => setWhatComp("bookmarks")}
+          className={`${whatComp === "bookmarks" ? "activeTab" : ""}`}
+        >
+          bookmarks <IoTicketSharp />
+        </button>
       </div>
       {whatComp === "rephraseTool" && <RephraseTool />}
       {whatComp === "counterComp" && <CounterComp />}
       {whatComp === "performance" && <Performance />}
+      {whatComp === "bookmarks" && <BookMarks />}
       {whatComp === "tempInput" && (
         <>
           <AnimatePresence>
