@@ -169,12 +169,14 @@ function TempsList() {
               <div className="body">
                 <p>{temp.body}</p>
               </div>
-              {temp.popularity > 0 && (
-                <div className="usedCount">
-                  {temp.popularity}
-                  <IoHeartCircle size={24} color="var(--first)" />
-                </div>
-              )}
+              <div className="footer pt-2 px-0">
+                {temp.popularity > 0 && (
+                  <div className="usedCount">
+                    {temp.popularity}
+                    <IoHeartCircle size={24} color="var(--first)" />
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>

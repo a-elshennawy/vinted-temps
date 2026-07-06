@@ -232,21 +232,16 @@ textarea {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 0.313rem;
 
         button {
             background-color: var(--white);
             color: var(--first);
             border: 0.063rem solid var(--first);
+            border-radius: 0.5rem;
             padding: 0.313rem 0.5rem;
             text-transform: capitalize;
-
-            &:first-child {
-                border-radius: 0.5rem 0rem 0rem 0.5rem;
-            }
-
-            &:last-child {
-                border-radius: 0rem 0.5rem 0.5rem 0rem;
-            }
         }
 
         .activeStatus {
@@ -529,11 +524,14 @@ textarea {
                 }
             }
 
+            .footer {
+                display: flex;
+                justify-content: flex-end;
+            }
+
             .usedCount {
                 background-color: var(--white);
-                position: absolute;
-                bottom: 0.125rem;
-                right: 0.125rem;
+                width: fit-content;
                 padding: 0.125rem;
                 display: flex;
                 justify-content: center;
