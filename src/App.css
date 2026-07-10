@@ -566,6 +566,9 @@ textarea {
                 padding: 0.25rem 0.5rem;
                 border: none;
                 border-radius: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.125rem;
             }
         }
     }
@@ -586,16 +589,15 @@ textarea {
             display: flex;
             flex-direction: column;
             align-items: start;
-
             gap: 0.313rem;
             color: var(--white);
             text-transform: capitalize;
 
             .header {
+                width: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                width: 100%;
                 gap: 0.313rem;
             }
 

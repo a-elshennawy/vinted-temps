@@ -1,52 +1,131 @@
 import { useState, useEffect } from "react";
-import { ImCancelCircle } from "react-icons/im";
 import BtnLoader from "../Reusables/UI/BtnLoader";
 import Nothing from "./UI/Nothing";
+import { supabase } from "../../supabase";
+import { TiDelete } from "react-icons/ti";
 
 function BookMarks() {
   const [ticketLink, setTicketLink] = useState("");
   const [ticketNote, setTicketNote] = useState("");
-  const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
+  const agentSession = localStorage.getItem("agentSession");
+  const agentName = agentSession ? JSON.parse(agentSession)?.name : null;
+
+  const [tickets, setTickets] = useState(() => {
+    if (agentSession) return [];
+    const stored = localStorage.getItem("tickets");
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  const getBookmarks = async () => {
+    if (!agentSession) return;
+    const { data, error } = await supabase
+      .from("bookmarks")
+      .select("*")
+      .eq("owner", agentName);
+    if (error) {
+      console.error("fetch bookmarks error:", error);
+      return;
+    }
+    setTickets(data || []);
+  };
 
   useEffect(() => {
-    const stored = localStorage.getItem("tickets");
-    if (stored) {
+    if (agentSession) {
       setTimeout(() => {
-        setTickets(JSON.parse(stored));
+        getBookmarks();
       }, 0);
     }
-  }, []);
+  });
 
   useEffect(() => {
-    localStorage.setItem("tickets", JSON.stringify(tickets));
-  }, [tickets]);
+    if (!agentSession || !agentName) return;
 
-  const onAddTicket = (e) => {
+    const channel = supabase
+      .channel(`bookmarks-${agentName}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "bookmarks",
+          filter: `owner=eq.${agentName}`,
+        },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            setTickets((prev) =>
+              prev.some((t) => t.id === payload.new.id)
+                ? prev
+                : [...prev, payload.new],
+            );
+          } else if (payload.eventType === "UPDATE") {
+            setTickets((prev) =>
+              prev.map((t) => (t.id === payload.new.id ? payload.new : t)),
+            );
+          } else if (payload.eventType === "DELETE") {
+            setTickets((prev) => prev.filter((t) => t.id !== payload.old.id));
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [agentSession, agentName]);
+
+  useEffect(() => {
+    if (!agentSession) {
+      localStorage.setItem("tickets", JSON.stringify(tickets));
+    }
+  }, [tickets, agentSession]);
+
+  const onAddTicket = async (e) => {
     e.preventDefault();
     if (!ticketLink || !ticketNote) return;
     setLoading(true);
-
     let cleanLink = ticketLink.trim();
-
     if (!/^https?:\/\//i.test(cleanLink)) {
       cleanLink = `https://${cleanLink}`;
     }
-
     const newTicket = {
       id: Date.now(),
       link: cleanLink,
       note: ticketNote.trim(),
     };
 
-    setTickets((prev) => [...prev, newTicket]);
+    if (agentSession) {
+      const { data, error } = await supabase
+        .from("bookmarks")
+        .insert([{ ...newTicket, owner: agentName }])
+        .select();
+
+      if (error) {
+        console.error("insert error:", error);
+      } else if (data?.length) {
+        setTickets((prev) => [...prev, data[0]]);
+      }
+    } else {
+      setTickets((prev) => [...prev, newTicket]);
+    }
+
     setTicketLink("");
     setTicketNote("");
     setLoading(false);
   };
 
-  const onDeleteTicket = (id) => {
-    setTickets((prev) => prev.filter((t) => t.id !== id));
+  const onDeleteTicket = async (id) => {
+    if (agentSession) {
+      const { error } = await supabase.from("bookmarks").delete().eq("id", id);
+
+      if (error) {
+        console.error("delete error:", error);
+        return;
+      }
+      setTickets((prev) => prev.filter((t) => t.id !== id));
+    } else {
+      setTickets((prev) => prev.filter((t) => t.id !== id));
+    }
   };
 
   return (
@@ -72,7 +151,15 @@ function BookMarks() {
             />
           </div>
           <div className="action">
-            <button>{loading ? <BtnLoader /> : "Add"}</button>
+            <button>
+              {loading ? (
+                <>
+                  Adding <BtnLoader color="var(--first)" />
+                </>
+              ) : (
+                "Add"
+              )}
+            </button>
           </div>
         </form>
         {tickets.length === 0 && <Nothing />}
@@ -83,7 +170,7 @@ function BookMarks() {
                 <div className="header">
                   <span>{ticket.note}</span>
                   <button onClick={() => onDeleteTicket(ticket.id)}>
-                    <ImCancelCircle size={22} />
+                    <TiDelete size={22} />
                   </button>
                 </div>
                 <a href={ticket.link} target="_blank" rel="noopener noreferrer">
