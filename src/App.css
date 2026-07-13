@@ -278,6 +278,13 @@ textarea {
         }
     }
 
+    .lastIncreaseNote {
+        background-color: var(--first);
+        padding: 0.25rem;
+        border-radius: 0.5rem;
+        color: var(--white);
+    }
+
     .currentStatus {
         display: flex;
         align-items: center;

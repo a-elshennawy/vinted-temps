@@ -3,11 +3,13 @@ import BtnLoader from "../Reusables/UI/BtnLoader";
 import Nothing from "./UI/Nothing";
 import { supabase } from "../../supabase";
 import { TiDelete } from "react-icons/ti";
+import Loader from "../Reusables/UI/Loader";
 
 function BookMarks() {
   const [ticketLink, setTicketLink] = useState("");
   const [ticketNote, setTicketNote] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingTickets, setLoadingTickets] = useState(true);
   const agentSession = localStorage.getItem("agentSession");
   const agentName = agentSession ? JSON.parse(agentSession)?.name : null;
 
@@ -28,6 +30,7 @@ function BookMarks() {
       return;
     }
     setTickets(data || []);
+    setLoadingTickets(false);
   };
 
   useEffect(() => {
@@ -77,6 +80,9 @@ function BookMarks() {
   useEffect(() => {
     if (!agentSession) {
       localStorage.setItem("tickets", JSON.stringify(tickets));
+      setTimeout(() => {
+        setLoadingTickets(false);
+      }, 0);
     }
   }, [tickets, agentSession]);
 
@@ -162,6 +168,7 @@ function BookMarks() {
             </button>
           </div>
         </form>
+        {loadingTickets && <Loader />}
         {tickets.length === 0 && <Nothing />}
         {tickets.length > 0 && (
           <div className="bookmarksList">

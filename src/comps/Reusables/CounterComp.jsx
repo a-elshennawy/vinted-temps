@@ -26,6 +26,8 @@ const EMPTY_DURATIONS = {
 };
 
 function CounterComp() {
+  const [lastIncrease, setLastIncrease] = useState(null);
+  const [now, setNow] = useState(Date.now());
   const [isShiftActive, setIsShiftActive] = useState(
     () => localStorage.getItem("isShiftActive") === "true",
   );
@@ -356,6 +358,7 @@ function CounterComp() {
   const increment = () => {
     if (status !== "live") return;
     setCurrentCount((prev) => prev + 1);
+    setLastIncrease(Date.now());
   };
 
   const decrement = () => {
@@ -372,6 +375,30 @@ function CounterComp() {
     const url = await res.text();
     window.open(url, "_blank");
   };
+
+  useEffect(() => {
+    if (!isShiftActive) return;
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, [isShiftActive]);
+
+  const timeSinceLastIncrease = lastIncrease ? now - lastIncrease : null;
+
+  function formatElapsed(ms) {
+    if (ms == null) return "";
+    const totalSeconds = Math.floor(ms / 1000);
+
+    if (totalSeconds < 60) return "less than a minute";
+
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    if (totalMinutes < 60) {
+      return `${totalMinutes} minute${totalMinutes !== 1 ? "s" : ""}`;
+    }
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours} Hour${hours !== 1 ? "s" : ""} : ${minutes} minute${minutes !== 1 ? "s" : ""}`;
+  }
 
   if (!isShiftActive) {
     return (
@@ -466,6 +493,12 @@ function CounterComp() {
           <FaPlus size={24} />
         </button>
       </div>
+
+      {lastIncrease && (
+        <span className="lastIncreaseNote mt-1">
+          Last reply: {formatElapsed(timeSinceLastIncrease)} ago
+        </span>
+      )}
 
       <div className="currentStatus my-2">
         <span>{status}</span>
