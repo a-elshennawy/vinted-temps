@@ -35,10 +35,7 @@ function AddNewAgent() {
       {
         name: name,
         email: vintedEmail,
-        tww_id: twwId,
         vinted_id: vintedId,
-        team_leader: tl,
-        spec: "S&D",
       },
     ]);
 
@@ -98,15 +95,7 @@ function AddNewAgent() {
             onChange={(e) => setVintedEmail(e.target.value)}
           />
         </div>
-        <div className="inputField">
-          <label>TWW ID</label>
-          <input
-            type="text"
-            required
-            value={twwId}
-            onChange={(e) => setTwwId(e.target.value)}
-          />
-        </div>
+
         <div className="inputField">
           <label>vinted ID</label>
           <input
@@ -116,15 +105,7 @@ function AddNewAgent() {
             onChange={(e) => setVintedId(e.target.value)}
           />
         </div>
-        <div className="inputField">
-          <label>TL</label>
-          <input
-            type="text"
-            required
-            value={tl}
-            onChange={(e) => setTl(e.target.value)}
-          />
-        </div>
+
         <div className="line"></div>
         <div className="actions">
           <button type="submit">

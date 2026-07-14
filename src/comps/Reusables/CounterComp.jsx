@@ -26,8 +26,10 @@ const EMPTY_DURATIONS = {
 };
 
 function CounterComp() {
-  const [lastIncrease, setLastIncrease] = useState(null);
-  const [now, setNow] = useState(Date.now());
+  const [lastIncrease, setLastIncrease] = useState(
+    () => parseInt(localStorage.getItem("lastIncrease")) || null,
+  );
+  const [now, setNow] = useState(() => Date.now());
   const [isShiftActive, setIsShiftActive] = useState(
     () => localStorage.getItem("isShiftActive") === "true",
   );
@@ -145,6 +147,7 @@ function CounterComp() {
     );
     localStorage.setItem("statusStartTime", statusStartTime);
     if (shiftDate) localStorage.setItem("shiftDate", shiftDate);
+    if (lastIncrease) localStorage.setItem("lastIncrease", lastIncrease);
   }, [
     isShiftActive,
     currentCount,
@@ -156,6 +159,7 @@ function CounterComp() {
     statusDurationsBase,
     statusStartTime,
     shiftDate,
+    lastIncrease,
   ]);
   const agentSession = localStorage.getItem("agentSession");
 
@@ -340,6 +344,7 @@ function CounterComp() {
       "statusDurationsBase",
       "statusStartTime",
       "shiftDate",
+      "lastIncrease",
     ].forEach((key) => localStorage.removeItem(key));
   }, []);
 
