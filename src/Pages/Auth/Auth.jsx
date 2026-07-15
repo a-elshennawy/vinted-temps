@@ -7,11 +7,16 @@ import BtnLoader from "../../comps/Reusables/UI/BtnLoader";
 import { AnimatePresence, motion as Motion } from "motion/react";
 import { FaHome } from "react-icons/fa";
 import errorIcon from "../../assets/imgs/cancel.png";
+import { useEffect } from "react";
 
 function Auth() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { logType } = useParams();
   const navigate = useNavigate();
   const setLogType = (type) => navigate(`/auth/${type}`);
+
+  // agent register
+  const [agentName, setAgentName] = useState("");
 
   // agent login
   const [vintedEmail, setVintedEmail] = useState("");
@@ -65,7 +70,44 @@ function Auth() {
       .single();
 
     if (error || !data) {
-      showError("Not Added Yet,Contact Support.");
+      showError("New Agent ?");
+      setLoading(false);
+      setLogType("new_agent");
+      return;
+    }
+
+    localStorage.setItem(
+      "agentSession",
+      JSON.stringify({
+        name: data.name,
+        email: data.email,
+        vinted_id: data.vinted_id,
+      }),
+    );
+
+    navigate("/");
+    setLoading(false);
+  };
+
+  const handleAgentReg = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await supabase
+      .from("agents")
+      .insert([
+        {
+          name: agentName,
+          email: vintedEmail.trim().toLowerCase(),
+          vinted_id: vintedId.trim(),
+        },
+      ])
+      .select()
+      .single();
+
+    if (error || !data) {
+      showError("Contact Support");
       setLoading(false);
       return;
     }
@@ -82,6 +124,20 @@ function Auth() {
     navigate("/");
     setLoading(false);
   };
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const agentSession = localStorage.getItem("agentSession");
 
@@ -111,24 +167,38 @@ function Auth() {
         <div className="authSwitcher">
           {!agentSession && (
             <>
-              <button
-                onClick={() => setLogType("admin")}
-                className={logType === "admin" ? "activeLogType" : ""}
-              >
-                admin login
-              </button>
+              {!isLoggedIn && (
+                <button
+                  onClick={() => setLogType("admin")}
+                  className={logType === "admin" ? "activeLogType" : ""}
+                >
+                  admin login
+                </button>
+              )}
               <button
                 onClick={() => setLogType("agent")}
                 className={logType === "agent" ? "activeLogType" : ""}
               >
                 agent login
               </button>
+              <button
+                onClick={() => setLogType("new_agent")}
+                className={logType === "new_agent" ? "activeLogType" : ""}
+              >
+                agent register
+              </button>
             </>
           )}
         </div>
 
         <form
-          onSubmit={logType === "agent" ? handleAgentLogin : handleAdminLogin}
+          onSubmit={
+            logType === "admin"
+              ? handleAdminLogin
+              : logType === "agent"
+                ? handleAgentLogin
+                : handleAgentReg
+          }
           className="authForm"
         >
           {logType === "agent" && (
@@ -157,6 +227,41 @@ function Auth() {
             </>
           )}
 
+          {logType === "new_agent" && (
+            <>
+              <div className="inputField">
+                <label>agent name</label>
+                <input
+                  type="text"
+                  value={agentName}
+                  onChange={(e) => setAgentName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="line"></div>
+              <div className="inputField">
+                <label>vinted email</label>
+                <input
+                  type="email"
+                  value={vintedEmail}
+                  onChange={(e) => setVintedEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+              </div>
+              <div className="line"></div>
+              <div className="inputField">
+                <label>vinted id</label>
+                <input
+                  type="text"
+                  value={vintedId}
+                  onChange={(e) => setVintedId(e.target.value)}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+            </>
+          )}
           {logType === "admin" && (
             <>
               <div className="inputField">

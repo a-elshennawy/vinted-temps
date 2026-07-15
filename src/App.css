@@ -630,7 +630,7 @@ textarea {
     border-radius: 0.5rem;
     width: fit-content !important;
     position: fixed;
-    top: 3.125rem;
+    top: 3.75rem;
     right: 1rem;
     transform: translateX(-50%);
     display: flex;
