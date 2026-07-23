@@ -1,4 +1,4 @@
-import InputComp from "../../comps/Reusables/InputComp";
+import ControlComp from "../../comps/Reusables/ControlComp";
 import TempsList from "../../comps/Reusables/TempsList";
 
 function Home() {
@@ -6,7 +6,7 @@ function Home() {
     <>
       <title>Temp Store | Home</title>
       <div className="row justify-content-evenly align-items-start gap-1 m-0">
-        <InputComp />
+        <ControlComp />
         <TempsList />
       </div>
     </>

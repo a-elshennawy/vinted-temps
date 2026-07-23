@@ -6,7 +6,7 @@
     --black: #000;
     --first: #007782;
     --second: #66adb4;
-    --error: #ff2c2c;
+    --error: #ff3a3a;
     --warning: #ffc107;
     --success: #00ff1b;
     --green: #0f9d58;
@@ -62,19 +62,28 @@ textarea {
     }
 }
 
-.inpComp {
+.ControlComp {
     padding: 0.625rem 0rem;
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
 
     .inputField {
+        position: relative;
         label {
             display: block;
             text-transform: capitalize;
             margin-bottom: 0.25rem;
             color: var(--first);
             font-weight: bold;
+        }
+
+        span {
+            position: absolute;
+            top: 50%;
+            right: 0.313rem;
+            transform: translateY(-50%);
+            cursor: pointer;
         }
     }
 
@@ -590,7 +599,8 @@ textarea {
 
         .bookmarkItem {
             background-color: var(--first);
-            width: fit-content;
+            min-width: 12.5rem;
+            max-width: fit-content;
             padding: 0.313rem;
             border-radius: 0.5rem;
             display: flex;
@@ -618,6 +628,131 @@ textarea {
                 border: none;
                 color: var(--error);
                 padding: 0;
+            }
+        }
+    }
+}
+
+.passwordsComp {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+
+    .lockedDiv {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.625rem;
+
+        button {
+            background-color: var(--first);
+            padding: 0.313rem;
+            border: none;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.125rem;
+
+            a {
+                color: var(--white);
+                font-weight: bold;
+            }
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        background-color: var(--first);
+        width: fit-content;
+        padding: 0.313rem;
+        border-radius: 0.5rem;
+
+        .action {
+            button {
+                background-color: var(--white);
+                color: var(--first);
+                font-weight: bold;
+                padding: 0.25rem 0.5rem;
+                border: none;
+                border-radius: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.125rem;
+            }
+        }
+    }
+
+    .passwordsList {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .passItem {
+            background-color: var(--first);
+            color: var(--white);
+            padding: 0.313rem;
+            border-radius: 0.5rem;
+            min-width: 12.5rem;
+            max-width: fit-content;
+            display: flex;
+            align-items: start;
+            flex-direction: column;
+            gap: 0.313rem;
+
+            .header {
+                border-radius: 0.313rem;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.625rem;
+
+                h6 {
+                    color: var(--white) !important;
+                }
+
+                svg {
+                    color: var(--error);
+                    cursor: pointer;
+                }
+            }
+
+            .line {
+                height: 0.025rem;
+                width: 100%;
+                background-color: var(--second);
+            }
+
+            .body {
+                display: flex;
+                align-items: start;
+                flex-direction: column;
+                gap: 0.313rem;
+                width: 100%;
+
+                .passDetails {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 0.625rem;
+                    width: 100%;
+
+                    p {
+                        color: var(--white) !important;
+                    }
+
+                    .actions {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+
+                        span {
+                            cursor: pointer;
+                        }
+                    }
+                }
             }
         }
     }

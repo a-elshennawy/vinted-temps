@@ -4,10 +4,13 @@ import Nothing from "./UI/Nothing";
 import { supabase } from "../../supabase";
 import { TiDelete } from "react-icons/ti";
 import Loader from "../Reusables/UI/Loader";
+import { FaCopy, FaCheck } from "react-icons/fa";
 
 function BookMarks() {
   const [ticketLink, setTicketLink] = useState("");
   const [ticketNote, setTicketNote] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [copiedTicket, setCopiedTicket] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingTickets, setLoadingTickets] = useState(true);
   const agentSession = localStorage.getItem("agentSession");
@@ -134,6 +137,19 @@ function BookMarks() {
     }
   };
 
+  const handleCopyLink = (id) => {
+    const ticketLink = tickets.find((t) => t.id === id)?.link;
+    setCopiedTicket(id);
+    if (ticketLink) {
+      navigator.clipboard.writeText(ticketLink);
+      setCopied(true);
+    }
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
   return (
     <>
       <div className="bookmarksComp py-2">
@@ -168,17 +184,29 @@ function BookMarks() {
             </button>
           </div>
         </form>
-        {loadingTickets && <Loader />}
-        {tickets.length === 0 && <Nothing />}
+        {loadingTickets ? (
+          <Loader color="var(--first)" />
+        ) : (
+          tickets.length === 0 && <Nothing />
+        )}
         {tickets.length > 0 && (
           <div className="bookmarksList">
             {tickets.map((ticket) => (
               <div key={ticket.id} className="bookmarkItem">
                 <div className="header">
                   <span>{ticket.note}</span>
-                  <button onClick={() => onDeleteTicket(ticket.id)}>
-                    <TiDelete size={22} />
-                  </button>
+                  <div className="actions d-flex gap-1">
+                    <button onClick={() => handleCopyLink(ticket.id)}>
+                      {copied && copiedTicket === ticket.id ? (
+                        <FaCheck color="var(--white)" />
+                      ) : (
+                        <FaCopy color="var(--white)" />
+                      )}
+                    </button>
+                    <button onClick={() => onDeleteTicket(ticket.id)}>
+                      <TiDelete size={22} />
+                    </button>
+                  </div>
                 </div>
                 <a href={ticket.link} target="_blank" rel="noopener noreferrer">
                   {ticket.link}
