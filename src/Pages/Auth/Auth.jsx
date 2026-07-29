@@ -143,7 +143,7 @@ function Auth() {
 
   return (
     <>
-      <title>Temp Store | Authentication</title>
+      <title>Vinted Internal | Authentication</title>
 
       <div className="authPage">
         <AnimatePresence>
@@ -229,6 +229,9 @@ function Auth() {
 
           {logType === "new_agent" && (
             <>
+              <span className="noteSpan mb-3">
+                Kindly use your vinted account details
+              </span>
               <div className="inputField">
                 <label>agent name</label>
                 <input

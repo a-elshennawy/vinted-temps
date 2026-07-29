@@ -8,19 +8,13 @@
     --second: #66adb4;
     --error: #ff3a3a;
     --warning: #ffc107;
+    --second-warning: #ffeb00;
     --success: #00ff1b;
     --green: #0f9d58;
-
-    /* shift status */
-    --live: #00ff1b;
-    --break: #fffd00;
-    --lunch: #ff9800;
-    --training: #00b8ff;
-    --meeting: #ff0000;
 }
 
 * {
-    font-family: outfit !important;
+    font-family: exo_2 !important;
 }
 
 a {
@@ -205,11 +199,11 @@ textarea {
 }
 
 .counterComp {
-    padding: 0.313rem 0rem;
     display: flex;
     justify-content: start;
     align-items: start;
     flex-direction: column;
+    gap: 0.5rem;
 
     .head {
         display: flex;
@@ -298,13 +292,20 @@ textarea {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.313rem;
+        gap: 0.625rem;
         background-color: var(--first);
         border-radius: 0.625rem;
-        padding: 0.25rem;
+        padding: 0.25rem 0.313rem;
+
+        .totalCounts {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
 
         span {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             text-transform: capitalize;
             color: var(--white);
         }
@@ -347,19 +348,19 @@ textarea {
 
             .line {
                 background-color: var(--second);
-                height: 0.063rem;
+                height: 0.025rem;
                 width: 100%;
             }
 
             .logRange {
                 background-color: var(--second);
-                font-size: 1rem;
+                font-size: 1.25rem;
                 padding: 0.25rem;
                 border-radius: 0.313rem;
             }
 
             .logCount {
-                font-size: 1.25rem;
+                font-size: 2rem;
                 display: flex;
                 align-items: center;
                 gap: 0.313rem;
@@ -368,6 +369,7 @@ textarea {
 
             .logPerformance {
                 width: 100%;
+                font-size: 1.25rem;
 
                 .progressBar {
                     background-color: var(--second);
@@ -376,6 +378,7 @@ textarea {
 
                     .progress {
                         height: 0.25rem;
+                        border-radius: 0.5rem;
                     }
 
                     .red {

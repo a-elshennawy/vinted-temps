@@ -8,6 +8,7 @@ const Home = lazy(() => import("./Pages/Home/Home"));
 const Auth = lazy(() => import("./Pages/Auth/Auth"));
 const Pending = lazy(() => import("./Pages/Pending/Pending"));
 const Agents = lazy(() => import("./Pages/Agents/Agents"));
+const Rank = lazy(() => import("./Pages/Rank/Rank"));
 
 function App() {
   useAutoRefresh();
@@ -20,6 +21,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="agents" element={<Agents />} />
               <Route path="pending" element={<Pending />} />
+              <Route path="agents-rank" element={<Rank />} />
             </Route>
             <Route path="/auth/:logType" element={<Auth />} />
           </Routes>

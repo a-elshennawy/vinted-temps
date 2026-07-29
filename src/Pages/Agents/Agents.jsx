@@ -7,7 +7,7 @@ function Agents() {
 
   return (
     <>
-      <title>Temp Store | Agents</title>
+      <title>Vinted Internal | Agents</title>
       <div className="agentsPage py-3">
         <div className="tabSwitcher">
           <button

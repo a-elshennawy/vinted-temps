@@ -44,6 +44,14 @@
         flex-direction: column;
         align-items: center;
 
+        .noteSpan {
+            background-color: var(--second);
+            color: var(--white);
+            padding: 0.313rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+        }
+
         h3 {
             background-color: var(--white);
             color: var(--first) !important;

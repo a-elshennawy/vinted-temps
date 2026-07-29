@@ -8,6 +8,7 @@ import NotificationDot from "./NotificationDot";
 import { HiUserAdd } from "react-icons/hi";
 import { BiUserCheck } from "react-icons/bi";
 import { IoMdLogIn } from "react-icons/io";
+import { PiRankingFill } from "react-icons/pi";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -59,11 +60,15 @@ function Navbar() {
                 <RiAdminLine size={24} />
               </button>
             )}
+
             {agentSession ? (
               <>
                 <span className="agentName">
                   {agentName} <BiUserCheck size={24} />
                 </span>
+                <button onClick={() => navigate("/agents-rank")}>
+                  <PiRankingFill size={24} />
+                </button>
               </>
             ) : (
               <Link className="toAgentLogin" to={`/auth/agent`}>
@@ -98,6 +103,37 @@ function Navbar() {
             <button onClick={() => navigate("/pending")}>
               <FaEnvelope size={24} />
               <NotificationDot />
+            </button>
+          </>
+        )}
+
+        {location.pathname === "/agents-rank" && (
+          <>
+            {isLoggedIn ? (
+              <>
+                <span onClick={handleLogout}>
+                  <img src={logoutIcon} alt="logout" />
+                </span>
+                <button onClick={() => navigate("/pending")}>
+                  <FaEnvelope size={24} />
+                  <NotificationDot />
+                </button>
+                <button onClick={() => navigate("/agents")}>
+                  <HiUserAdd size={24} />
+                </button>
+              </>
+            ) : (
+              <button onClick={() => navigate("/auth/admin")}>
+                <RiAdminLine size={24} />
+              </button>
+            )}
+
+            <span className="agentName">
+              {agentName} <BiUserCheck size={24} />
+            </span>
+
+            <button onClick={() => navigate("/")}>
+              <FaHome size={24} />
             </button>
           </>
         )}

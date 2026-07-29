@@ -1,17 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CounterComp from "./CounterComp";
 import RephraseTool from "./RephraseTool";
 import { RiGeminiFill, RiLockPasswordFill } from "react-icons/ri";
 // import Working from "./UI/Working";
-import Performance from "./Performance";
 import { BiSolidMessageRoundedCheck } from "react-icons/bi";
-import { FaCopy, FaBookmark, FaChartLine } from "react-icons/fa";
+import { FaCopy, FaBookmark } from "react-icons/fa";
 import BookMarks from "./BookMarks";
 import PasswordsComp from "./PasswordsComp";
 import TemplateInput from "./TemplateInput";
+import { PiRankingFill } from "react-icons/pi";
 
 function ControlComp() {
   const [whatComp, setWhatComp] = useState("counterComp");
+  const navigate = useNavigate();
+  const agentSession = localStorage.getItem("agentSession");
 
   return (
     <div className="ControlComp col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12">
@@ -34,12 +37,13 @@ function ControlComp() {
         >
           rephrase <RiGeminiFill />
         </button>
-        <button
-          onClick={() => setWhatComp("performance")}
-          className={`${whatComp === "performance" ? "activeTab" : ""}`}
-        >
-          performance <FaChartLine />
-        </button>
+        {agentSession && (
+          <>
+            <button onClick={() => navigate("/agents-rank")}>
+              rank <PiRankingFill />
+            </button>
+          </>
+        )}
         <button
           onClick={() => setWhatComp("bookmarks")}
           className={`${whatComp === "bookmarks" ? "activeTab" : ""}`}
@@ -55,7 +59,6 @@ function ControlComp() {
       </div>
       {whatComp === "rephraseTool" && <RephraseTool />}
       {whatComp === "counterComp" && <CounterComp />}
-      {whatComp === "performance" && <Performance />}
       {whatComp === "bookmarks" && <BookMarks />}
       {whatComp === "passwords" && <PasswordsComp />}
       {whatComp === "tempInput" && <TemplateInput />}
