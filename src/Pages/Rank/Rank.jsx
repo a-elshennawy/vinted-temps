@@ -7,6 +7,7 @@ import goblinIcon from "../../assets/imgs/goblin.png";
 import dongleIcon from "../../assets/imgs/dongle.png";
 import kakoIcon from "../../assets/imgs/kako.png";
 import Working from "../../comps/Reusables/UI/Working";
+import loadingCat from "../../assets/imgs/loadingCat.png";
 
 const TITLES = ["human", "goblin", "dongle", "kako"];
 
@@ -103,6 +104,21 @@ function Rank() {
         <div className="row justify-content-center align-items-center text-center py-5">
           <div className="col-9">
             <Working />
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  const allZero =
+    agents.length > 0 && agents.every((a) => (a.replies || 0) === 0);
+
+  if (allZero) {
+    return (
+      <>
+        <div className="row justify-content-center align-items-center text-center py-5">
+          <div className="col-9">
+            <img src={loadingCat} alt="" />
           </div>
         </div>
       </>
