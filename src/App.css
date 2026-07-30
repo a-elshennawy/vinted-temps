@@ -184,20 +184,6 @@ textarea {
     }
 }
 
-.openSheetBtn {
-    background-color: var(--green);
-    color: var(--white);
-    border: none;
-    padding: 0.313rem;
-    border-radius: 0.5rem;
-    text-transform: capitalize;
-    margin-top: 0.313rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.125rem;
-}
-
 .counterComp {
     display: flex;
     justify-content: start;
@@ -229,28 +215,6 @@ textarea {
         height: 0.063rem;
         width: 80%;
         background-color: var(--first);
-    }
-
-    .statusSelector {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 0.313rem;
-
-        button {
-            background-color: var(--white);
-            color: var(--first);
-            border: 0.063rem solid var(--first);
-            border-radius: 0.5rem;
-            padding: 0.313rem 0.5rem;
-            text-transform: capitalize;
-        }
-
-        .activeStatus {
-            background-color: var(--first);
-            color: var(--white);
-        }
     }
 
     .mainCounter {
@@ -354,7 +318,7 @@ textarea {
 
             .logRange {
                 background-color: var(--second);
-                font-size: 1.25rem;
+                font-size: 1rem;
                 padding: 0.25rem;
                 border-radius: 0.313rem;
             }
@@ -369,7 +333,7 @@ textarea {
 
             .logPerformance {
                 width: 100%;
-                font-size: 1.25rem;
+                font-size: 1rem;
 
                 .progressBar {
                     background-color: var(--second);
@@ -817,19 +781,6 @@ textarea {
     justify-content: center;
     align-items: center;
     text-align: center;
-}
-
-.chart {
-    background-color: var(--second);
-    border-radius: 0.313rem;
-
-    svg text {
-        fill: var(--black) !important;
-    }
-
-    .domainAndTicks line {
-        stroke: var(--black) !important;
-    }
 }
 
 ::-webkit-scrollbar {

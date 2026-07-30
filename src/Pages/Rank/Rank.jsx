@@ -8,8 +8,11 @@ import dongleIcon from "../../assets/imgs/dongle.png";
 import kakoIcon from "../../assets/imgs/kako.png";
 import Working from "../../comps/Reusables/UI/Working";
 import loadingCat from "../../assets/imgs/loadingCat.png";
+import arrowIcon from "../../assets/imgs/arrow.png";
 
 const TITLES = ["human", "goblin", "dongle", "kako"];
+const agentSession = localStorage.getItem("agentSession");
+const agentName = agentSession ? JSON.parse(agentSession).name : null;
 
 function getTitleForRank(rank) {
   return TITLES[Math.min(rank - 1, TITLES.length - 1)];
@@ -139,20 +142,31 @@ function Rank() {
             </tr>
           </thead>
           <tbody>
-            {rankedAgents.map((agent) => (
-              <tr
-                key={agent.id}
-                className={`rank-${agent.title}${agent.tied ? " tied" : ""}`}
-              >
-                <td>{agent.rank}</td>
-                <td>{agent.name}</td>
-                <td>{agent.replies}</td>
-                <td className="title">
-                  {agent.title}
-                  <img src={getIconForTitle(agent.title)} alt={agent.title} />
-                </td>
-              </tr>
-            ))}
+            {rankedAgents.map((agent) => {
+              const isMe = agent.name === agentName;
+              return (
+                <>
+                  <tr
+                    key={agent.id}
+                    className={`rank-${agent.title}${agent.tied ? " tied" : ""}${isMe ? " me" : ""}`}
+                  >
+                    <td>
+                      {isMe && <img src={arrowIcon} alt="here" />}
+                      {agent.rank}
+                    </td>
+                    <td>{agent.name}</td>
+                    <td>{agent.replies}</td>
+                    <td className="title">
+                      {agent.title}
+                      <img
+                        src={getIconForTitle(agent.title)}
+                        alt={agent.title}
+                      />
+                    </td>
+                  </tr>
+                </>
+              );
+            })}
           </tbody>
         </table>
       </div>

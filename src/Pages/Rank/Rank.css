@@ -6,11 +6,24 @@
     gap: 0.625rem;
 
     table {
+        position: relative;
         border-collapse: separate;
         border-spacing: 0.313rem;
         background-color: var(--first);
         color: var(--white);
         text-align: center;
+
+        tr.me td:first-child {
+            position: relative;
+
+            img {
+                width: 1.25rem;
+                position: absolute;
+                left: -1.75rem;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
 
         thead {
             background-color: var(--second);
@@ -30,6 +43,7 @@
 
                     img {
                         width: 1.25rem;
+                        animation: arrowMoving 1s infinite;
                     }
                 }
 
@@ -59,4 +73,22 @@
             }
         }
     }
+}
+
+
+/* animations */
+@keyframes arrowMoving {
+    0% {
+        left: -1.75rem;
+
+    }
+
+    50%{
+        left: -2.188rem;
+    }
+
+    100% {
+        left: -1.75rem;
+    }
+}
 }

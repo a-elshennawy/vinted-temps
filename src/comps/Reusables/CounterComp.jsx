@@ -345,11 +345,11 @@ function CounterComp() {
               <div className="logHeader">
                 <span className="logRange">{log.hourRange}</span>
               </div>
-              <span className="logCount my-2">
+              <span className="logCount my-1">
                 {log.count} <BiSolidMessageRoundedCheck />
               </span>
 
-              <div className="line my-1"></div>
+              <div className="line mb-1"></div>
               <span className="logPerformance">
                 {log.performance}%
                 <div className="progressBar my-1">
