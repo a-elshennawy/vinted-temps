@@ -75,20 +75,17 @@
     }
 }
 
-
 /* animations */
 @keyframes arrowMoving {
     0% {
         left: -1.75rem;
-
     }
 
-    50%{
+    50% {
         left: -2.188rem;
     }
 
     100% {
         left: -1.75rem;
     }
-}
 }
