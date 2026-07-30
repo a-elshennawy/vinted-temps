@@ -101,6 +101,7 @@ function Auth() {
           name: agentName,
           email: vintedEmail.trim().toLowerCase(),
           vinted_id: vintedId.trim(),
+          replies: 0,
         },
       ])
       .select()
