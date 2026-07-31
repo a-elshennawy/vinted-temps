@@ -5,6 +5,31 @@
     flex-direction: column;
     gap: 0.625rem;
 
+    .resetSection {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 0.313em;
+
+        p {
+            text-align: center;
+            text-transform: capitalize;
+        }
+
+        button {
+            background-color: var(--error);
+            color: var(--white);
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.313rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.313rem;
+        }
+    }
+
     table {
         position: relative;
         border-collapse: separate;

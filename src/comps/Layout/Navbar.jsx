@@ -42,7 +42,7 @@ function Navbar() {
       <nav>
         {location.pathname === "/" && (
           <>
-            {isLoggedIn ? (
+            {isLoggedIn && agentSession ? (
               <>
                 <span onClick={handleLogout}>
                   <img src={logoutIcon} alt="logout" />
@@ -54,15 +54,37 @@ function Navbar() {
                 <button onClick={() => navigate("/agents")}>
                   <HiUserAdd size={24} />
                 </button>
+                <button onClick={() => navigate("/agents-rank")}>
+                  <PiRankingFill size={24} />
+                </button>
+                <span className="agentName">
+                  {agentName} <BiUserCheck size={24} />
+                </span>
               </>
-            ) : (
-              <button onClick={() => navigate("/auth/admin")}>
-                <RiAdminLine size={24} />
-              </button>
-            )}
-
-            {agentSession ? (
+            ) : isLoggedIn ? (
               <>
+                <span onClick={handleLogout}>
+                  <img src={logoutIcon} alt="logout" />
+                </span>
+                <button onClick={() => navigate("/pending")}>
+                  <FaEnvelope size={24} />
+                  <NotificationDot />
+                </button>
+                <button onClick={() => navigate("/agents")}>
+                  <HiUserAdd size={24} />
+                </button>
+                <button onClick={() => navigate("/agents-rank")}>
+                  <PiRankingFill size={24} />
+                </button>
+                <Link className="toAgentLogin" to={`/auth/agent`}>
+                  agent login <IoMdLogIn size={20} />
+                </Link>
+              </>
+            ) : agentSession ? (
+              <>
+                <button onClick={() => navigate("/auth/admin")}>
+                  <RiAdminLine size={24} />
+                </button>
                 <span className="agentName">
                   {agentName} <BiUserCheck size={24} />
                 </span>
@@ -71,13 +93,17 @@ function Navbar() {
                 </button>
               </>
             ) : (
-              <Link className="toAgentLogin" to={`/auth/agent`}>
-                agent login <IoMdLogIn size={20} />
-              </Link>
+              <>
+                <button onClick={() => navigate("/auth/admin")}>
+                  <RiAdminLine size={24} />
+                </button>
+                <Link className="toAgentLogin" to={`/auth/agent`}>
+                  agent login <IoMdLogIn size={20} />
+                </Link>
+              </>
             )}
           </>
         )}
-
         {location.pathname === "/pending" && (
           <>
             <span onClick={handleLogout}>
@@ -128,9 +154,19 @@ function Navbar() {
               </button>
             )}
 
-            <span className="agentName">
-              {agentName} <BiUserCheck size={24} />
-            </span>
+            {agentSession ? (
+              <>
+                <span className="agentName">
+                  {agentName} <BiUserCheck size={24} />
+                </span>
+              </>
+            ) : (
+              <>
+                <Link className="toAgentLogin" to={`/auth/agent`}>
+                  agent login <IoMdLogIn size={20} />
+                </Link>
+              </>
+            )}
 
             <button onClick={() => navigate("/")}>
               <FaHome size={24} />

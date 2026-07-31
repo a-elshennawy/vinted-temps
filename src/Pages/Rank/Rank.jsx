@@ -1,5 +1,6 @@
 import "./Rank.css";
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase";
 import Loader from "../../comps/Reusables/UI/Loader";
 import personIcon from "../../assets/imgs/person.png";
@@ -9,6 +10,7 @@ import kakoIcon from "../../assets/imgs/kako.png";
 import Working from "../../comps/Reusables/UI/Working";
 import loadingCat from "../../assets/imgs/loadingCat.png";
 import arrowIcon from "../../assets/imgs/arrow.png";
+import { IoIosWarning } from "react-icons/io";
 
 const TITLES = ["human", "goblin", "dongle", "kako"];
 const agentSession = localStorage.getItem("agentSession");
@@ -60,6 +62,28 @@ function rankAgents(agents) {
 function Rank() {
   const [agents, setAgents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(true);
+    }, 0);
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session);
+      setLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -97,9 +121,32 @@ function Rank() {
 
   const rankedAgents = useMemo(() => rankAgents(agents), [agents]);
 
+  const needToGo = !agentSession && !isLoggedIn;
+
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+
+    if (needToGo) {
+      navigate("/");
+    }
+  }, [needToGo, navigate, loading]);
+
   if (loading) {
     return <Loader />;
   }
+
+  const handleResetReplies = async () => {
+    const { error } = await supabase
+      .from("agents")
+      .update({ replies: 0 })
+      .not("id", "is", null);
+
+    if (error) {
+      console.error("Failed to reset replies:", error);
+    }
+  };
 
   if (agents.length === 0) {
     return (
@@ -119,9 +166,9 @@ function Rank() {
   if (allZero) {
     return (
       <>
-        <div className="row justify-content-center align-items-center text-center py-5">
-          <div className="col-9">
-            <img src={loadingCat} alt="" />
+        <div className="row justify-content-center align-items-center text-center py-5 m-0">
+          <div className="col-xl-5 col-lg-6 col-md-8 col-sm-10 col-10 m-0">
+            <img src={loadingCat} alt="" width="100%" />
           </div>
         </div>
       </>
@@ -132,6 +179,16 @@ function Rank() {
     <>
       <title>Vinted Internal | Rank</title>
       <div className="rankPage py-5">
+        {isLoggedIn && (
+          <>
+            <div className="resetSection p-1 mb-2">
+              <p>use only by the end of the month</p>
+              <button onClick={handleResetReplies}>
+                Reset replies <IoIosWarning size={20} />
+              </button>
+            </div>
+          </>
+        )}
         <table>
           <thead>
             <tr>
