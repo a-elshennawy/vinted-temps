@@ -23,8 +23,6 @@ export function useAutoRefresh() {
 
         if (data.version !== currentVersion) {
           // New deployment detected — reload!
-          localStorage.clear();
-          sessionStorage.clear();
           window.location.reload();
         }
       } catch {

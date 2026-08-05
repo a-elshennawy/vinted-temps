@@ -368,6 +368,30 @@ textarea {
     justify-content: start;
     align-items: center;
 
+    .providerSelector {
+        display: flex;
+        gap: 0.313rem;
+
+        button {
+            background-color: transparent;
+            border: 0.063rem solid var(--first);
+            color: var(--first);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+
+            img {
+                width: 1.25rem;
+            }
+        }
+
+        .active {
+            background-color: var(--first);
+            color: var(--white);
+        }
+    }
+
     .originalReply {
         .charCount {
             background-color: var(--first);

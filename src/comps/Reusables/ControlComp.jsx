@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CounterComp from "./CounterComp";
-import RephraseTool from "./RephraseTool";
 import { RiGeminiFill, RiLockPasswordFill } from "react-icons/ri";
 // import Working from "./UI/Working";
 import { BiSolidMessageRoundedCheck } from "react-icons/bi";
@@ -31,12 +30,7 @@ function ControlComp() {
         >
           counter <BiSolidMessageRoundedCheck />
         </button>
-        <button
-          onClick={() => setWhatComp("rephraseTool")}
-          className={`${whatComp === "rephraseTool" ? "activeTab" : ""}`}
-        >
-          rephrase <RiGeminiFill />
-        </button>
+
         {agentSession && (
           <>
             <button onClick={() => navigate("/agents-rank")}>
@@ -57,7 +51,6 @@ function ControlComp() {
           passwords <RiLockPasswordFill />{" "}
         </button>
       </div>
-      {whatComp === "rephraseTool" && <RephraseTool />}
       {whatComp === "counterComp" && <CounterComp />}
       {whatComp === "bookmarks" && <BookMarks />}
       {whatComp === "passwords" && <PasswordsComp />}
