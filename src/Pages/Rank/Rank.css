@@ -68,7 +68,6 @@
 
                     img {
                         width: 1.25rem;
-                        animation: arrowMoving 1s infinite;
                     }
                 }
 
@@ -97,20 +96,5 @@
                 background-color: var(--error);
             }
         }
-    }
-}
-
-/* animations */
-@keyframes arrowMoving {
-    0% {
-        left: -1.75rem;
-    }
-
-    50% {
-        left: -2.188rem;
-    }
-
-    100% {
-        left: -1.75rem;
     }
 }

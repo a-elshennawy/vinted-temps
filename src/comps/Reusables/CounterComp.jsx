@@ -252,8 +252,9 @@ function CounterComp() {
   // no active shift
   if (!isShiftActive) {
     return (
-      <div className="preShiftComp p-0">
+      <div className="preShiftComp p-0 mt-3">
         <WaitingShift />
+
         {submitError && (
           <p
             style={{

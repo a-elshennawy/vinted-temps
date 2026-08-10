@@ -134,7 +134,7 @@ function Rank() {
   }, [needToGo, navigate, loading]);
 
   if (loading) {
-    return <Loader />;
+    return <Loader color="var(--first)" />;
   }
 
   const handleResetReplies = async () => {
@@ -194,8 +194,9 @@ function Rank() {
             <tr>
               <th>Rank</th>
               <th>Agent</th>
+              <th>ID</th>
               <th>Replies</th>
-              <th>Title</th>
+              <th>Species</th>
             </tr>
           </thead>
           <tbody>
@@ -212,6 +213,7 @@ function Rank() {
                       {agent.rank}
                     </td>
                     <td>{agent.name}</td>
+                    <td>{agent.vinted_id}</td>
                     <td>{agent.replies}</td>
                     <td className="title">
                       {agent.title}

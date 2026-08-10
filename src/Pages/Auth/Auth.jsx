@@ -205,24 +205,27 @@ function Auth() {
           {logType === "agent" && (
             <>
               <div className="inputField">
-                <label>vinted email</label>
+                <label>vinted email (@vinted.com)</label>
                 <input
                   type="email"
                   value={vintedEmail}
                   onChange={(e) => setVintedEmail(e.target.value)}
                   required
                   autoComplete="email"
+                  pattern="[a-zA-Z0-9._%+-]+@vinted\.com"
+                  placeholder="agent.name@vinted.com"
                 />
               </div>
               <div className="line"></div>
               <div className="inputField">
-                <label>vinted id</label>
+                <label>vinted id (not the one on your id)</label>
                 <input
                   type="text"
                   value={vintedId}
                   onChange={(e) => setVintedId(e.target.value)}
                   required
                   autoComplete="off"
+                  placeholder="ex: 15496"
                 />
               </div>
             </>
@@ -234,7 +237,7 @@ function Auth() {
                 Kindly use your vinted account details
               </span>
               <div className="inputField">
-                <label>agent name</label>
+                <label>agent full name</label>
                 <input
                   type="text"
                   value={agentName}
@@ -244,24 +247,27 @@ function Auth() {
               </div>
               <div className="line"></div>
               <div className="inputField">
-                <label>vinted email</label>
+                <label>vinted email (@vinted.com)</label>
                 <input
                   type="email"
                   value={vintedEmail}
                   onChange={(e) => setVintedEmail(e.target.value)}
                   required
                   autoComplete="email"
+                  pattern="[a-zA-Z0-9._%+-]+@vinted\.com"
+                  placeholder="agent.name@vinted.com"
                 />
               </div>
               <div className="line"></div>
               <div className="inputField">
-                <label>vinted id</label>
+                <label>vinted id (not the one on your id)</label>
                 <input
                   type="text"
                   value={vintedId}
                   onChange={(e) => setVintedId(e.target.value)}
                   required
                   autoComplete="off"
+                  placeholder="ex: 15496"
                 />
               </div>
             </>
