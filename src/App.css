@@ -147,6 +147,10 @@ textarea {
     flex-direction: column;
     gap: 0.313rem;
 
+    img {
+        width: 100%;
+    }
+
     .targetInput {
         display: flex;
         align-items: center;

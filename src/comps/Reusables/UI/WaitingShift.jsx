@@ -6,7 +6,6 @@ function WaitingShift() {
   return (
     <>
       <img src={cat} alt="cat side eye" />
-
       {/* <DotLottieReact src={WaitingShiftLottie} loop autoplay />*/}
     </>
   );

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CounterComp from "./CounterComp";
-import { RiGeminiFill, RiLockPasswordFill } from "react-icons/ri";
+import { RiLockPasswordFill } from "react-icons/ri";
 // import Working from "./UI/Working";
 import { BiSolidMessageRoundedCheck } from "react-icons/bi";
 import { FaCopy, FaBookmark } from "react-icons/fa";

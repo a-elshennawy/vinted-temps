@@ -194,7 +194,6 @@ function Rank() {
             <tr>
               <th>Rank</th>
               <th>Agent</th>
-              <th>ID</th>
               <th>Replies</th>
               <th>Species</th>
             </tr>
@@ -213,7 +212,6 @@ function Rank() {
                       {agent.rank}
                     </td>
                     <td>{agent.name}</td>
-                    <td>{agent.vinted_id}</td>
                     <td>{agent.replies}</td>
                     <td className="title">
                       {agent.title}
