@@ -78,6 +78,11 @@
             input {
                 text-align: center;
             }
+
+            select {
+                width: 100%;
+                text-transform: capitalize;
+            }
         }
 
         .line {

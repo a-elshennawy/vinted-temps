@@ -17,6 +17,7 @@ function Auth() {
 
   // agent register
   const [agentName, setAgentName] = useState("");
+  const [tl, setTl] = useState("");
 
   // agent login
   const [vintedEmail, setVintedEmail] = useState("");
@@ -30,6 +31,8 @@ function Auth() {
   const [error, setError] = useState(null);
   const [toastShow, setToastShow] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [teamLeaders, setTeamLeaders] = useState([]);
 
   const showError = (msg) => {
     setError(msg);
@@ -57,6 +60,26 @@ function Auth() {
     setLoading(false);
   };
 
+  const getTeamleaders = async () => {
+    const { data, error } = await supabase
+      .from("agents")
+      .select("*")
+      .eq("TL", true);
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    setTeamLeaders(data);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      getTeamleaders();
+    }, 0);
+  }, []);
+
   const handleAgentLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -64,7 +87,7 @@ function Auth() {
 
     const { data, error } = await supabase
       .from("agents")
-      .select("name, email, vinted_id")
+      .select("name, email, vinted_id, TL")
       .eq("email", vintedEmail.trim().toLowerCase())
       .eq("vinted_id", vintedId.trim())
       .single();
@@ -82,6 +105,7 @@ function Auth() {
         name: data.name,
         email: data.email,
         vinted_id: data.vinted_id,
+        TL: data.TL,
       }),
     );
 
@@ -102,6 +126,8 @@ function Auth() {
           email: vintedEmail.trim().toLowerCase(),
           vinted_id: vintedId.trim(),
           replies: 0,
+          TL: false,
+          TeamLeader: tl,
         },
       ])
       .select()
@@ -119,6 +145,7 @@ function Auth() {
         name: data.name,
         email: data.email,
         vinted_id: data.vinted_id,
+        TL: data.TL,
       }),
     );
 
@@ -270,6 +297,19 @@ function Auth() {
                   placeholder="ex: 15496"
                 />
               </div>
+              <div className="line"></div>
+              <div className="inputField">
+                <label>team leader</label>
+                <select value={tl} onChange={(e) => setTl(e.target.value)}>
+                  <option>select your TL</option>
+                  {teamLeaders.map((leader) => (
+                    <option key={leader.id} value={leader.name}>
+                      {leader.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="line"></div>
             </>
           )}
           {logType === "admin" && (

@@ -5,27 +5,42 @@ import { useState } from "react";
 import BtnLoader from "./UI/BtnLoader";
 import { AnimatePresence, motion as Motion } from "motion/react";
 import correctIcon from "../../assets/imgs/correct.png";
+import { useEffect } from "react";
 
 function AddNewAgent() {
   const [name, setName] = useState("");
   const [vintedEmail, setVintedEmail] = useState("");
-  const [twwId, setTwwId] = useState("");
   const [vintedId, setVintedId] = useState("");
   const [tl, setTl] = useState("");
+  const [teamLeaders, setTeamLeaders] = useState([]);
   const [toastShow, setToastShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const getTeamleaders = async () => {
+    const { data, error } = await supabase
+      .from("agents")
+      .select("*")
+      .eq("TL", true);
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    setTeamLeaders(data);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      getTeamleaders();
+    }, 0);
+  }, []);
+
   const handleSave = async (e) => {
     e.preventDefault();
 
-    if (
-      !name.trim() ||
-      !vintedEmail.trim() ||
-      !twwId.trim() ||
-      !vintedId.trim() ||
-      !tl.trim()
-    )
+    if (!name.trim() || !vintedEmail.trim() || !vintedId.trim() || !tl.trim())
       return;
 
     setLoading(true);
@@ -36,6 +51,9 @@ function AddNewAgent() {
         name: name,
         email: vintedEmail,
         vinted_id: vintedId,
+        replies: 0,
+        TL: false,
+        TeamLeader: tl,
       },
     ]);
 
@@ -50,7 +68,6 @@ function AddNewAgent() {
 
     setName("");
     setVintedEmail("");
-    setTwwId("");
     setVintedId("");
     setTl("");
   };
@@ -95,7 +112,6 @@ function AddNewAgent() {
             onChange={(e) => setVintedEmail(e.target.value)}
           />
         </div>
-
         <div className="inputField">
           <label>vinted ID</label>
           <input
@@ -105,7 +121,17 @@ function AddNewAgent() {
             onChange={(e) => setVintedId(e.target.value)}
           />
         </div>
-
+        <div className="inputField">
+          <label>team leader</label>
+          <select value={tl} onChange={(e) => setTl(e.target.value)}>
+            <option>select your TL</option>
+            {teamLeaders.map((leader) => (
+              <option key={leader.id} value={leader.name}>
+                {leader.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="line"></div>
         <div className="actions">
           <button type="submit">

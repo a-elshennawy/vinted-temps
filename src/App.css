@@ -40,7 +40,8 @@ body {
 }
 
 input,
-textarea {
+textarea,
+select {
     padding: 0.313rem;
     border-radius: 0.5rem;
     border: 0.063rem solid var(--second);
@@ -471,7 +472,7 @@ textarea {
 
 .workingComp {
     img {
-        width: 70%;
+        width: 100%;
     }
 }
 

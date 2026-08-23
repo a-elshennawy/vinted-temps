@@ -1,0 +1,40 @@
+.tlPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .switcher {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.313rem;
+
+        button {
+            display: flex;
+            align-items: center;
+            gap: 0.313rem;
+            border: 0.063rem solid var(--first);
+            border-radius: 0.5rem;
+            padding: 0.25rem;
+            background-color: var(--white);
+            color: var(--first);
+            text-transform: capitalize;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                background-color: var(--first);
+                color: var(--white);
+                transform: translateY(-0.25rem);
+                transition: all 0.3s ease-in-out;
+            }
+        }
+
+        .activeTab {
+            background-color: var(--first);
+            color: var(--white);
+            transition: all 0.3s ease-in-out;
+        }
+    }
+}

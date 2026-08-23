@@ -87,7 +87,11 @@ function Rank() {
 
   useEffect(() => {
     const fetchAgents = async () => {
-      const { data, error } = await supabase.from("agents").select("*");
+      const { data, error } = await supabase
+        .from("agents")
+        .select("*")
+        .neq("TL", true)
+        .neq("replies", 0);
       if (!error) setAgents(data);
       setLoading(false);
     };

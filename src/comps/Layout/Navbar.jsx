@@ -9,12 +9,53 @@ import { HiUserAdd } from "react-icons/hi";
 import { BiUserCheck } from "react-icons/bi";
 import { IoMdLogIn } from "react-icons/io";
 import { PiRankingFill } from "react-icons/pi";
+import { SiVinted } from "react-icons/si";
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [agent, setAgent] = useState(() => {
+    const s = localStorage.getItem("agentSession");
+    return s ? JSON.parse(s) : null;
+  });
 
+  useEffect(() => {
+    if (!agent?.email) return;
+
+    const syncAgent = async () => {
+      const { data, error } = await supabase
+        .from("agents")
+        .select("name, email, vinted_id, TL")
+        .eq("email", agent.email)
+        .single();
+
+      if (!error && data) {
+        localStorage.setItem("agentSession", JSON.stringify(data));
+        setAgent(data);
+      }
+    };
+    syncAgent();
+
+    const channel = supabase
+      .channel("agent-tl-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "agents",
+          filter: `email=eq.${agent.email}`,
+        },
+        (payload) => {
+          localStorage.setItem("agentSession", JSON.stringify(payload.new));
+          setAgent(payload.new);
+        },
+      )
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [agent?.email]);
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsLoggedIn(!!session);
@@ -36,6 +77,7 @@ function Navbar() {
 
   const agentSession = localStorage.getItem("agentSession");
   const agentName = agentSession ? JSON.parse(agentSession)?.name : null;
+  const isTl = agent?.TL;
 
   return (
     <>
@@ -104,6 +146,7 @@ function Navbar() {
             )}
           </>
         )}
+
         {location.pathname === "/pending" && (
           <>
             <span onClick={handleLogout}>
@@ -171,6 +214,29 @@ function Navbar() {
             <button onClick={() => navigate("/")}>
               <FaHome size={24} />
             </button>
+          </>
+        )}
+
+        {location.pathname === "/tls-tools" && (
+          <>
+            <button onClick={() => navigate("/")}>
+              <FaHome size={24} />
+            </button>
+          </>
+        )}
+
+        {location.pathname !== "/tls-tools" && (
+          <>
+            {isTl && (
+              <>
+                <button
+                  className="tlToolsBtns"
+                  onClick={() => navigate("/tls-tools")}
+                >
+                  TL Tools <SiVinted color="var(--first)" />
+                </button>
+              </>
+            )}
           </>
         )}
       </nav>
