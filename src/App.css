@@ -815,3 +815,10 @@ select {
 ::-webkit-scrollbar {
     display: none;
 }
+
+/* responsive for smaller screen resolutions */
+@media (max-width: 768px) {
+    :root {
+        font-size: 12px;
+    }
+}
